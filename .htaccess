@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteBase /ulifeci/
+RewriteCond $1 !^(index\.php|images|robots\.txt|assets)
+RewriteRule ^(.*)$ index.php/$1 [L]

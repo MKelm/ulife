@@ -15,11 +15,11 @@ class Research_model extends CI_Model {
     $this->load->database();
   }
 
-  public function load_users_research_list()
+  public function load_users_research_list($field_ids = NULL)
   {
-    $this->load->model("user/user_research_model");
-    $this->_users_research_list = $this->user_research_model->get_research_list(
-      $this->session->userdata("user_id")
+    $this->load->model("user_model");
+    $this->_users_research_list = $this->user_model->get_research_list(
+      $this->session->userdata("user_id"), $field_ids
     );
   }
 
@@ -57,7 +57,7 @@ class Research_model extends CI_Model {
     if (count($fields_list) > 0 && $with_levels === TRUE)
     {
       if ($with_user_entries === TRUE)
-        $this->load_users_research_list();
+        $this->load_users_research_list(array_keys($fields_list));
       foreach ($fields_list as $id => $field)
       {
         $this->db->select(array("id", "number", "researchers", "experience"));
@@ -85,9 +85,12 @@ class Research_model extends CI_Model {
 
   public function start_research($field_id, $level_id)
   {
-    //$researcherId = $this->_units->getUnitIdByName("researcher");
-    //$researchersAmounts = $this->_user->getResearchersAmounts($researcherId);
-    $researchers_amount["inactive"] = 10;
+    $this->load->model("unit_model");
+    $researcher_id = $this->unit_model->get_unit_id_by_name("researcher");
+    $this->load->model("user_model");
+    $researchers_amount = $this->user_model->get_researchers_amount(
+      $this->session->userdata("user_id"), $researcher_id
+    );
 
     $this->db->select(array("researchers"));
     $query = $this->db->get_where(

@@ -34,10 +34,20 @@ class Research_model extends CI_Model {
     return array();
   }
 
-  public function get_fields_list(
-                    $parent_id = 0,
-                    $with_levels = TRUE, $with_user_entries = TRUE
-                  )
+  public function get_users_finalized_research_levels($field_id)
+  {
+    $result = array();
+    foreach ($this->_users_research_list as $entry) {
+      if ($field_id == $entry["field_id"] && $entry["rounds"] == 0)
+      {
+        $result[] = $entry["field_level_id"];
+      }
+    }
+    return $result;
+  }
+
+  // research fields list for user view
+  public function get_fields_list($parent_id = 0, $with_levels = TRUE)
   {
     $this->db->select(array("id", "parent_id", "name", "title", "text"));
     $this->db->order_by("title", "asc");
@@ -56,15 +66,19 @@ class Research_model extends CI_Model {
     }
     if (count($fields_list) > 0 && $with_levels === TRUE)
     {
-      if ($with_user_entries === TRUE)
-        $this->load_users_research_list(array_keys($fields_list));
+
+      $this->load_users_research_list(array_keys($fields_list));
       foreach ($fields_list as $id => $field)
       {
         $this->db->select(array("id", "number", "researchers", "experience"));
         $this->db->order_by("number", "asc");
-        $query = $this->db->get_where(
-          $this->_levels_table, array("field_id" => $id), 1
-        );
+        $this->db->where("field_id", $id);
+
+        $user_finalized_research_levels =
+          $this->get_users_finalized_research_levels($id);
+        if (count($user_finalized_research_levels) > 0)
+          $this->db->where_not_in("id", $user_finalized_research_levels);
+        $query = $this->db->get($this->_levels_table, 1);
         $fields_list[$id]["levels"] = array();
         foreach ($query->result() as $row)
         {
@@ -72,16 +86,8 @@ class Research_model extends CI_Model {
             "number" => $row->number,
             "researchers" => $row->researchers,
             "experience" => $row->experience,
-            "user" => NULL
+            "user" => $this->get_users_research_entry($id, $row->id)
           );
-          if ($with_user_entries === TRUE)
-          {
-            $user_entry =
-              $this->get_users_research_entry($id, $row->id);
-            $fields_list[$id]["levels"][$row->id]["done"] =
-              isset($user_entry["rounds"]) ? $user_entry["rounds"] == 0 : FALSE;
-            $fields_list[$id]["levels"][$row->id]["user"] = $user_entry;
-          }
         }
       }
     }

@@ -1,0 +1,3 @@
+<p>ULife spielt in einer fiktiven Zeit in der Welt Urielian. Der Oberste dieser Welt heißt Rashni und ist ein wohl angesehener Guru. Er ist es auch, der dem Spieler ein Stück Land andreht. Der Spieler bekommt den Auftrag das Land zu besiedeln und zu bewirtschaften.</p>
+    <p>Der Spieler erhält etwas Holz, Stein, Nahrung und Münzen am Anfang. Zudem bekommt der Spieler 20 Bürger spendiert, die in der Basis wohnen. Aber es gibt noch keine Erfahrungen in der Forschung, daher gilt es zuerst mal sich Forschungsfelder zu erschließen.</p>
+    <p>Das Spiel läuft in Runden ab. Eine Runde dauert fünf Minuten. Der Spieler hat innerhalb dieser fünf Minuten die Möglichkeit Aktionen zu planen. Die Berechnung von Aktionen beginnt dann am Ende der Runde.</p>

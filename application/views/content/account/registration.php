@@ -1,13 +1,15 @@
-<? if (!empty($confirmation_link)): ?>
-<div class="alert alert-warning" role="alert">Bitte bestätige deine Registrierung über <a href="<?=$confirmation_link?>">diesen Link</a>!</div>
-<? elseif ($registration_status === TRUE): ?>
-<div class="alert alert-success" role="alert">Registrierung erfolgreich, eine Bestätigungsemail wurde versand!</div>
-<? endif; ?>
-<?=validation_errors()?>
 <div class="panel panel-default">
   <div class="panel-heading"><h3 class="panel-title"><strong>Registrierung  </strong></h3></div>
   <div class="panel-body">
-    <form role="form" name="registration" action="<?=base_url()?>/account/registration/send" method="post" accept-charset="utf-8">
+    <!-- messages -->
+    <? if (!empty($confirmation_link)): ?>
+    <div class="alert alert-warning" role="alert">Bitte bestätige deine Registrierung über <a href="<?=$confirmation_link?>">diesen Link</a>!</div>
+    <? elseif ($registration_status === TRUE): ?>
+    <div class="alert alert-success" role="alert">Registrierung erfolgreich, eine Bestätigungsemail wurde versand!</div>
+    <? endif; ?>
+    <?=validation_errors()?>
+    <!-- form -->
+    <form role="form" name="registration" action="<?=base_url()?>account/registration/send" method="post" accept-charset="utf-8">
       <div class="form-group <?form_field_error_status($field_errors, "name")?>">
         <label for="name">Benutzername</label>
         <input type="text" name="name" class="form-control" placeholder="Benutzername" value="<?=set_value("name")?>">

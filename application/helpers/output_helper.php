@@ -6,13 +6,15 @@ if ( ! function_exists('page_nav_item_active'))
 {
   function page_nav_item_active($activePage, $page)
   {
+    if (strpos($activePage, "/") === FALSE && strpos($page, "/") !== FALSE)
+      $page = explode("/", $page)[0];
     echo ($activePage == $page) ? " class=\"active\" " : "";
   }
 }
 
-if ( ! function_exists('sub_nav_button_active'))
+if ( ! function_exists('sub_nav_item_active'))
 {
-  function sub_nav_button_active($activePageAction, $pageAction)
+  function sub_nav_item_active($activePageAction, $pageAction)
   {
     echo ($pageAction == $activePageAction) ? "active" : "";
   }

@@ -73,6 +73,6 @@ class Account extends CI_Controller {
   {
     $this->load->model("account/login_model");
     $this->login_model->disable_login();
-    redirect("");
+    redirect("account/login");
   }
 }

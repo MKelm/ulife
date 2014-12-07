@@ -37,6 +37,13 @@ class View {
         $this->CI->session->userdata("user_id")
       );
     }
+    else if (in_array(
+               $this->page, array("start", "research", "buildings", "units")
+            ))
+    {
+      // disable view on protected pages without login
+      redirect("account/login");
+    }
     $layoutData["page"] = $this->page;
     $layoutData["valid_user"] = $this->valid_user;
     $layoutData["title"] = $this->title;

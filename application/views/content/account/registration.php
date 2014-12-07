@@ -1,14 +1,7 @@
-<? if ($registration_status === TRUE): ?>
-<div class="alert alert-success" role="alert">Registrierung erfolgreich, eine Bestätigungsemail wurde versand!</div>
-<? endif; ?>
 <? if (!empty($confirmation_link)): ?>
-<div class="alert alert-warning" role="alert">Die Bestätigungsmailfunktion ist deaktiviert, bitte bestätige deine Registrierung über <a href="<?=$confirmation_link?>">diesen Link</a>!</div>
-<? endif; ?>
-<? if ($confirmation_status === TRUE): ?>
-<div class="alert alert-success" role="alert">Registrierung bestätigt, du kannst dich nun anmelden!</div>
-<? endif; ?>
-<? if ($confirmation_status === FALSE): ?>
-<div class="alert alert-danger" role="alert">Registrierung fehlerhaft, Bestätigung nicht erfolgreich!</div>
+<div class="alert alert-warning" role="alert">Bitte bestätige deine Registrierung über <a href="<?=$confirmation_link?>">diesen Link</a>!</div>
+<? elseif ($registration_status === TRUE): ?>
+<div class="alert alert-success" role="alert">Registrierung erfolgreich, eine Bestätigungsemail wurde versand!</div>
 <? endif; ?>
 <?=validation_errors()?>
 <div class="panel panel-default">

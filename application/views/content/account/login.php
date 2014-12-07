@@ -1,3 +1,9 @@
+<? if ($confirmation_status === TRUE): ?>
+<div class="alert alert-success" role="alert">Registrierung bestätigt, du kannst dich nun anmelden!</div>
+<? endif; ?>
+<? if ($confirmation_status === FALSE): ?>
+<div class="alert alert-danger" role="alert">Registrierung fehlerhaft, Bestätigung nicht erfolgreich!</div>
+<? endif; ?>
 <?=validation_errors()?>
 <div class="panel panel-default">
   <div class="panel-heading"><h3 class="panel-title"><strong>Anmelden</strong></h3></div>

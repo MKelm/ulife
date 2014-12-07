@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Account extends CI_Controller {
 
+  private $_confirmation_status = NULL;
+
   public function __construct() {
     parent::__construct();
   }
@@ -33,7 +35,6 @@ class Account extends CI_Controller {
     $data["field_errors"] = $this->registration_model->field_errors;
     $data["registration_status"] = $this->registration_model->get_status();
     $data["confirmation_link"] = $this->registration_model->get_confirmation_link();
-    $data["confirmation_status"] = NULL;
 
     $this->view->has_form = TRUE;
     $this->view->data = $data;
@@ -47,16 +48,11 @@ class Account extends CI_Controller {
 
     $data["field_errors"] = array();
     $data["registration_status"] = NULL;
-    $data["confirmation_status"] = $this->registration_model->confirm($key);
 
-    $this->view->has_form = TRUE;
-    $this->view->data = $data;
-    $this->view->title = "Registrierung";
-    $this->view->page = "account/registration";
-    $this->view->load();
+    $this->login($this->registration_model->confirm($key));
   }
 
-  public function login()
+  public function login($confirmation_status = NULL)
   {
     $this->load->model("account/login_model");
     $valid_user = $this->login_model->verify_login();
@@ -64,6 +60,7 @@ class Account extends CI_Controller {
       redirect("");
 
     $data["field_errors"] = $this->login_model->field_errors;
+    $data["confirmation_status"] = $confirmation_status;
 
     $this->view->has_form = TRUE;
     $this->view->data = $data;

@@ -21,6 +21,7 @@ class View {
   {
     $this->CI =& get_instance();
     $this->CI->load->helper("output");
+    $this->valid_user = $this->CI->session->userdata("valid_user") === TRUE;
   }
 
   function load($return = FALSE)
@@ -31,7 +32,7 @@ class View {
     $data = $this->data;
     $data["page"] = $this->page;
     $data["title"] = $this->title;
-    $data["valid_user"] = $this->CI->session->userdata("valid_user") === TRUE;
+    $data["valid_user"] = $this->valid_user;
 
     $layoutData = array();
     $layoutData["page"] = $this->page;

@@ -1,3 +1,17 @@
+<!-- messages -->
+<? if ($action === "start" && $action_status == FALSE): ?>
+<div class="alert alert-danger" role="alert">Forschung konnte nicht gestartet werden!</div>
+<? endif; ?>
+<? if ($action === "start" && $action_status == TRUE): ?>
+<div class="alert alert-success" role="alert">Forschung wurde erfolgreich gestartet!</div>
+<? endif; ?>
+<? if ($action === "stop" && $action_status == FALSE): ?>
+<div class="alert alert-danger" role="alert">Forschung konnte nicht gestoppt werden!</div>
+<? endif; ?>
+<? if ($action === "stop" && $action_status == TRUE): ?>
+<div class="alert alert-success" role="alert">Forschung wurde erfolgreich gestoppt!</div>
+<? endif; ?>
+<!-- research table -->
 <table class="table">
   <thead>
     <tr>
@@ -31,9 +45,9 @@
       </div></td>
       <td>0</td>
       <? if (empty($level["user"])): ?>
-        <td><a href="?page=research&section=<?=$selected_field_id?>&action=start&field=<?=$field_id?>&level=<?=$level_id?>">Starten</a></td>
+        <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/start/<?=$field_id?>/<?=$level_id?>">Starten</a></td>
       <? else: ?>
-      <td><a href="?page=research&section=<?=$selected_field_id?>&action=stop&field=<?=$field_id?>&level=<?=$level_id?>">Stoppen</a></td>
+      <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/stop/<?=$field_id?>/<?=$level_id?>">Stoppen</a></td>
       <? endif; ?>
     </tr>
     <? endforeach;

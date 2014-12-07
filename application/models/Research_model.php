@@ -7,13 +7,37 @@ class Research_model extends CI_Model {
 
   private $_levels_table = "research_levels";
 
+  private $_users_research_list = array();
+
   public function __construct()
   {
     parent::__construct();
     $this->load->database();
   }
 
-  public function get_fields_list($parent_id = 0, $with_levels = TRUE)
+  public function load_users_research_list()
+  {
+    $this->load->model("user/user_research_model");
+    $this->_users_research_list = $this->user_research_model->get_research_list(
+      $this->session->userdata("user_id")
+    );
+  }
+
+  public function get_users_research_entry($field_id, $level_id)
+  {
+    foreach ($this->_users_research_list as $entry) {
+      if ($field_id == $entry["field_id"] && $level_id == $entry["field_level_id"])
+      {
+        return $entry;
+      }
+    }
+    return array();
+  }
+
+  public function get_fields_list(
+                    $parent_id = 0,
+                    $with_levels = TRUE, $with_user_entries = TRUE
+                  )
   {
     $this->db->select(array("id", "parent_id", "name", "title", "text"));
     $this->db->order_by("title", "asc");
@@ -32,6 +56,8 @@ class Research_model extends CI_Model {
     }
     if (count($fields_list) > 0 && $with_levels === TRUE)
     {
+      if ($with_user_entries === TRUE)
+        $this->load_users_research_list();
       foreach ($fields_list as $id => $field)
       {
         $this->db->select(array("id", "number", "researchers", "experience"));
@@ -46,8 +72,11 @@ class Research_model extends CI_Model {
             "number" => $row->number,
             "researchers" => $row->researchers,
             "experience" => $row->experience,
-            "user" => NULL // todo load user entry to detect running research
+            "user" => NULL
           );
+          if ($with_user_entries === TRUE)
+            $fields_list[$id]["levels"][$row->id]["user"] =
+              $this->get_users_research_entry($id, $row->id);
         }
       }
     }

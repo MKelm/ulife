@@ -65,7 +65,6 @@ class Login_model extends CI_Model {
 
   function verify_login()
   {
-
     $this->form_validation->set_rules(
       'name', 'Name',
       'trim|required|xss_clean|'.
@@ -80,8 +79,14 @@ class Login_model extends CI_Model {
       $this->field_errors = $this->form_validation->error_array();
       return FALSE;
     } else {
+      $this->session->set_userdata("valid_user", TRUE);
       return TRUE;
     }
+  }
+
+  function disable_login()
+  {
+    $this->session->set_userdata("valid_user", FALSE);
   }
 
 }

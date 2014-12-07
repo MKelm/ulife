@@ -31,7 +31,7 @@ class View {
     $data = $this->data;
     $data["page"] = $this->page;
     $data["title"] = $this->title;
-    $data["valid_user"] = $this->valid_user;
+    $data["valid_user"] = $this->CI->session->userdata("valid_user") === TRUE;
 
     $layoutData = array();
     $layoutData["page"] = $this->page;

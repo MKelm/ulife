@@ -24,7 +24,18 @@ class View {
     $this->valid_user = $this->CI->session->userdata("valid_user") === TRUE;
   }
 
-  function load($return = FALSE)
+  private function _is_secured_page()
+  {
+    $secured_pages = array("start", "research", "buildings", "units");
+    foreach ($secured_pages as $secured_page)
+    {
+      if (strpos($this->page, $secured_page) !== FALSE)
+        return TRUE;
+    }
+    return FALSE;
+  }
+
+  public function load($return = FALSE)
   {
     if ($this->has_form === TRUE) // helper for forms
       $this->CI->load->helper("form");
@@ -32,18 +43,17 @@ class View {
     $layoutData = array();
     if ($this->valid_user === TRUE) // user data for general output
     {
-      $this->CI->load->model("account/user_model");
-      $layoutData["user"] = $this->CI->user_model->get_data(
+      $this->CI->load->model("account/account_model");
+      $layoutData["user"] = $this->CI->account_model->get_user_data(
         $this->CI->session->userdata("user_id")
       );
     }
-    else if (in_array(
-               $this->page, array("start", "research", "buildings", "units")
-            ))
+    else if ($this->_is_secured_page() === TRUE)
     {
       // disable view on protected pages without login
       redirect("account/login");
     }
+
     $layoutData["page"] = $this->page;
     $layoutData["valid_user"] = $this->valid_user;
     $layoutData["title"] = $this->title;

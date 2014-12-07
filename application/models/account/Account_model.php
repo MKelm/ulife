@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class User_model extends CI_Model {
+class Account_model extends CI_Model {
 
   private $_users_table = "users";
 
@@ -11,7 +11,7 @@ class User_model extends CI_Model {
     $this->load->database();
   }
 
-  public function get_data($user_id) {
+  public function get_user_data($user_id) {
 
     $query = $this->db->get_where($this->_users_table, array("id" => $user_id));
     foreach ($query->result() as $row)

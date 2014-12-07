@@ -21,6 +21,13 @@ class Start extends CI_Controller {
     $this->view->load();
   }
 
+  public function log()
+  {
+    $this->view->title .= "Protokoll";
+    $this->view->page = "start/log";
+    $this->view->load();
+  }
+
   public function map()
   {
     $this->load->library("map");

@@ -26,13 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
- * @copyright	Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
- * @license	http://opensource.org/licenses/MIT	MIT License
- * @link	http://codeigniter.com
- * @since	Version 1.0.0
+ * @package CodeIgniter
+ * @author  EllisLab Dev Team
+ * @copyright Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
+ * @copyright Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @license http://opensource.org/licenses/MIT  MIT License
+ * @link  http://codeigniter.com
+ * @since Version 1.0.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -88,15 +88,15 @@ $autoload['packages'] = array();
 |
 | Prototype:
 |
-|	$autoload['libraries'] = array('database', 'email', 'xmlrpc');
+| $autoload['libraries'] = array('database', 'email', 'xmlrpc');
 |
 | You can also supply an alternative library name to be assigned
 | in the controller:
 |
-|	$autoload['libraries'] = array('user_agent' => 'ua');
+| $autoload['libraries'] = array('user_agent' => 'ua');
 */
 
-$autoload['libraries'] = array();
+$autoload['libraries'] = array("view");
 
 
 /*
@@ -109,7 +109,7 @@ $autoload['libraries'] = array();
 |
 | Prototype:
 |
-|	$autoload['drivers'] = array('session', 'cache');
+| $autoload['drivers'] = array('session', 'cache');
 */
 
 $autoload['drivers'] = array();
@@ -121,10 +121,10 @@ $autoload['drivers'] = array();
 | -------------------------------------------------------------------
 | Prototype:
 |
-|	$autoload['helper'] = array('url', 'file');
+| $autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array();
+$autoload['helper'] = array("url");
 
 
 /*
@@ -133,7 +133,7 @@ $autoload['helper'] = array();
 | -------------------------------------------------------------------
 | Prototype:
 |
-|	$autoload['config'] = array('config1', 'config2');
+| $autoload['config'] = array('config1', 'config2');
 |
 | NOTE: This item is intended for use ONLY if you have created custom
 | config files.  Otherwise, leave it blank.
@@ -149,7 +149,7 @@ $autoload['config'] = array();
 | -------------------------------------------------------------------
 | Prototype:
 |
-|	$autoload['language'] = array('lang1', 'lang2');
+| $autoload['language'] = array('lang1', 'lang2');
 |
 | NOTE: Do not include the "_lang" part of your file.  For example
 | "codeigniter_lang.php" would be referenced as array('codeigniter');
@@ -165,12 +165,12 @@ $autoload['language'] = array();
 | -------------------------------------------------------------------
 | Prototype:
 |
-|	$autoload['model'] = array('first_model', 'second_model');
+| $autoload['model'] = array('first_model', 'second_model');
 |
 | You can also supply an alternative model name to be assigned
 | in the controller:
 |
-|	$autoload['model'] = array('first_model' => 'first');
+| $autoload['model'] = array('first_model' => 'first');
 */
 
 $autoload['model'] = array();

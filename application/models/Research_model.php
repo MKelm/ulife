@@ -17,8 +17,8 @@ class Research_model extends CI_Model {
 
   public function load_users_research_list($field_ids = NULL)
   {
-    $this->load->model("user_model");
-    $this->_users_research_list = $this->user_model->get_research_list(
+    $this->load->model("users_model");
+    $this->_users_research_list = $this->users_model->get_research_list(
       $this->session->userdata("user_id"), $field_ids
     );
   }
@@ -63,7 +63,7 @@ class Research_model extends CI_Model {
         $this->db->select(array("id", "number", "researchers", "experience"));
         $this->db->order_by("number", "asc");
         $query = $this->db->get_where(
-          $this->_levels_table, array("field_id" => $id)
+          $this->_levels_table, array("field_id" => $id), 1
         );
         $fields_list[$id]["levels"] = array();
         foreach ($query->result() as $row)
@@ -75,8 +75,13 @@ class Research_model extends CI_Model {
             "user" => NULL
           );
           if ($with_user_entries === TRUE)
-            $fields_list[$id]["levels"][$row->id]["user"] =
+          {
+            $user_entry =
               $this->get_users_research_entry($id, $row->id);
+            $fields_list[$id]["levels"][$row->id]["done"] =
+              isset($user_entry["rounds"]) ? $user_entry["rounds"] == 0 : FALSE;
+            $fields_list[$id]["levels"][$row->id]["user"] = $user_entry;
+          }
         }
       }
     }
@@ -85,10 +90,10 @@ class Research_model extends CI_Model {
 
   public function start_research($field_id, $level_id)
   {
-    $this->load->model("unit_model");
-    $researcher_id = $this->unit_model->get_unit_id_by_name("researcher");
-    $this->load->model("user_model");
-    $researchers_amount = $this->user_model->get_researchers_amount(
+    $this->load->model("units_model");
+    $researcher_id = $this->units_model->get_unit_id_by_name("researcher");
+    $this->load->model("users_model");
+    $researchers_amount = $this->users_model->get_researchers_amount(
       $this->session->userdata("user_id"), $researcher_id
     );
 

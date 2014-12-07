@@ -7,6 +7,8 @@ class Login_model extends CI_Model {
 
   private $_current_user_name = NULL;
 
+  private $_current_user_id = NULL;
+
   private $_users_table = "users";
 
   public function __construct()
@@ -28,6 +30,7 @@ class Login_model extends CI_Model {
     {
       if ($row->id > 0)
       {
+        $this->_current_user_id = $row->id;
         $this->_current_user_name = $name;
         return TRUE;
       }
@@ -80,6 +83,8 @@ class Login_model extends CI_Model {
       return FALSE;
     } else {
       $this->session->set_userdata("valid_user", TRUE);
+      $this->session->set_userdata("user_name", $this->_current_user_name);
+      $this->session->set_userdata("user_id", $this->_current_user_id);
       return TRUE;
     }
   }
@@ -87,6 +92,8 @@ class Login_model extends CI_Model {
   function disable_login()
   {
     $this->session->set_userdata("valid_user", FALSE);
+    $this->session->set_userdata("user_name", NULL);
+    $this->session->set_userdata("user_id", NULL);
   }
 
 }

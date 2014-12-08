@@ -85,19 +85,18 @@ class Users_research_model extends CI_Model {
     $this->load->model("update_model");
     $config = $this->update_model->load_config();
 
-    $sql = sprintf(
-      "SELECT m.id, m.unit_id, m.level_id FROM %s AS m ".
-      "LEFT JOIN %s AS n ON (n.unit_id = m.id AND n.user_id = m.user_id) ".
-      "WHERE m.user_id = ? AND m.unit_id = ? AND m.end_round <= ? ".
-      "AND n.research_id IS NULL ".
-      "ORDER BY m.level_id DESC ".
-      "LIMIT %s",
-      $this->_units_table, $this->_researchers_table,
-      $researchers_needed
+    $this->db->select(array("m.id", "m.unit_id", "m.level_id"));
+    $this->db->from($this->_units_table." as m");
+    $this->db->join(
+      $this->_researchers_table." as n",
+      "n.unit_id = m.id AND n.user_id = m.user_id",
+      "left"
     );
-    $query = $this->db->query(
-      $sql, array($user_id, $researcher_id, $config["round_number"])
-    );
+    $this->db->where("m.user_id", $user_id);
+    $this->db->where("m.unit_id", $researcher_id);
+    $this->db->where("m.end_round <=", $config["round_number"]);
+    $query = $this->db->get();
+
     $researchers = array();
     foreach ($query->result() as $row)
     {

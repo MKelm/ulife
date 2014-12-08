@@ -31,6 +31,9 @@
             $progress = 100 -
               (100/($level["user"]["end_round"] - $level["user"]["start_round"]))
                 * ($level["user"]["end_round"] - $round_number);
+            if ($progress < 0):
+              $progress = 0;
+            endif;
           else:
             $progress = 0;
             $time = 0;

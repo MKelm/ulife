@@ -101,20 +101,22 @@ class Research_model extends CI_Model {
       $this->session->userdata("user_id")
     );
 
-    $this->db->select(array("researchers"));
+    $this->db->select(array("researchers", "experience"));
     $query = $this->db->get_where(
       $this->_levels_table, array("id" => $level_id, "field_id" => $field_id)
     );
     $researchers_needed = 0;
+    $experience_needed = 0;
     foreach ($query->result() as $row)
     {
       $researchers_needed = $row->researchers;
+      $experience_needed = $row->experience;
     }
     if ($researchers_needed <= $researchers_amount["inactive"])
     {
       return $this->users_model->update_research(
         $this->session->userdata("user_id"),
-        $field_id, $level_id, $researchers_needed
+        $field_id, $level_id, $researchers_needed, $experience_needed
       );
     }
     return FALSE;
@@ -124,7 +126,7 @@ class Research_model extends CI_Model {
   {
     $this->load->model("users_model");
     return $this->users_model->update_research(
-      $this->session->userdata("user_id"), $field_id, $level_id, 0
+      $this->session->userdata("user_id"), $field_id, $level_id, 0, 0
     );
   }
 

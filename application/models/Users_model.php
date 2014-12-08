@@ -130,7 +130,8 @@ class Users_model extends CI_Model {
   }
 
   public function update_research(
-                    $user_id, $field_id, $field_level_id, $researchers_needed
+                    $user_id, $field_id, $field_level_id,
+                    $researchers_needed, $experience_needed
                   ) {
       // re/start or stop research
       $research_list = $this->get_research_list(
@@ -139,16 +140,19 @@ class Users_model extends CI_Model {
       if ($researchers_needed > 0)
       {
         // get list of ids with volumes of free researchers
-        $free_researchers = $this->get_free_researchers($user_id, $researchers_needed);
+        $researchers = $this->get_free_researchers($user_id, $researchers_needed);
+        // get exp volume per round by researcher volumes
+        $researchers_exp_volume = 0;
+        foreach ($researchers as $researcher)
+          $researchers_exp_volume += $researcher["volume"];
 
         if (count($research_list) == 1)
         {
           $current_research = current($research_list);
-          $this->add_researchers($user_id, $current_research["id"], $free_researchers);
+          $this->add_researchers($user_id, $current_research["id"], $researchers);
 
           $data = array(
-            // todo re-calc rest rounds by researchers volume
-            "rounds" => $current_research["rounds"],
+            "rounds" => ceil($current_research["experience"] / $researchers_exp_volume),
             "time" => time()
           );
           $this->db->where("id", $current_research["id"]);
@@ -160,13 +164,13 @@ class Users_model extends CI_Model {
             "user_id" => $user_id,
             "field_id" => $field_id,
             "field_level_id" => $field_level_id,
-            "experience" => 0,
-            "rounds" => 10, // todo calc rounds by researchers volume
+            "experience" => $experience_needed,
+            "rounds" => ceil($experience_needed / $researchers_exp_volume),
             "time" => time()
           );
           $result = $this->db->insert($this->_research_table, $data);
           if ($result == TRUE)
-            $this->add_researchers($user_id, $this->db->insert_id(), $free_researchers);
+            $this->add_researchers($user_id, $this->db->insert_id(), $researchers);
           return $result;
         }
       }

@@ -28,7 +28,7 @@
         foreach ($field["levels"] as $level_id => $level):
           if (!empty($level["user"])):
             $experience = $level["user"]["experience"];
-            $progress = (100/$level["experience"]) * $experience;
+            $progress = (100/$level["experience"]) * ($level["experience"] - $experience);
             $rounds = $level["user"]["rounds"];
           else:
             $experience = 0;

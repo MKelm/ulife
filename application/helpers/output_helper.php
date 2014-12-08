@@ -45,16 +45,20 @@ if ( ! function_exists('get_numeric_value'))
   {
     if ($value < 1000)
     {
-      echo $value;
+      $value = sprintf("%.1f", $value);
     }
     else if ($value < 1000000)
     {
-      echo sprintf("%.2fK", $value/1000);
+      $value = sprintf("%.1fK", $value/1000);
     }
     else
     {
-      echo sprintf("%.2fM", $value/1000000);
+      $value = sprintf("%.1fM", $value/1000000);
     }
+    if (strpos($value, ".0") !== FALSE)
+      echo str_replace(".0", "", $value);
+    else
+      echo $value;
   }
 }
 
@@ -64,19 +68,23 @@ if ( ! function_exists('get_numeric_time_value'))
   {
     if ($value < 60)
     {
-      echo $value."s";
+      $value = $value."s";
     }
     else if ($value < 3600)
     {
-      echo sprintf("%.2fm", $value/60);
+      $value = sprintf("%.1fm", $value/60);
     }
     else if ($value < 86400)
     {
-      echo sprintf("%.2fh", $value/3600);
+      $value = sprintf("%.1fh", $value/3600);
     }
     else
     {
-      echo sprintf("%.2fd", $value/86400);
+      $value = sprintf("%.1fd", $value/86400);
     }
+    if (strpos($value, ".0") !== FALSE)
+      echo str_replace(".0", "", $value);
+    else
+      echo $value;
   }
 }

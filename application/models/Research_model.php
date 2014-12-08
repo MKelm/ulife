@@ -17,7 +17,7 @@ class Research_model extends CI_Model {
 
   public function load_users_research_list($field_ids = NULL)
   {
-    $this->load->model("users_model");
+    $this->load->model("research/users_research_model", "users_model");
     $this->_users_research_list = $this->users_model->get_research_list(
       $this->session->userdata("user_id"), $field_ids
     );
@@ -95,7 +95,7 @@ class Research_model extends CI_Model {
 
   public function start_research($field_id, $level_id)
   {
-    $this->load->model("users_model");
+    $this->load->model("research/users_research_model", "users_model");
     $researchers_amount = $this->users_model->get_researchers_amount(
       $this->session->userdata("user_id")
     );
@@ -124,7 +124,7 @@ class Research_model extends CI_Model {
 
   public function pause_research($field_id, $level_id)
   {
-    $this->load->model("users_model");
+    $this->load->model("research/users_research_model", "users_model");
     return $this->users_model->update_research(
       $this->session->userdata("user_id"), $field_id, $level_id, 0, 0
     );

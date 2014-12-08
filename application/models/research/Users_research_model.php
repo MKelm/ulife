@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Users_model extends CI_Model {
+class Users_research_model extends CI_Model {
 
   private $_units_table = "users_units";
 
@@ -14,8 +14,6 @@ class Users_model extends CI_Model {
     parent::__construct();
     $this->load->database();
   }
-
-  // RESEARCH STUFF
 
   public function get_research_list(
                     $user_id, $field_ids = NULL, $field_level_ids = NULL

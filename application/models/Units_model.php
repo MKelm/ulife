@@ -26,4 +26,17 @@ class Units_model extends CI_Model {
     return NULL;
   }
 
+  public function get_unit_volume($unit_id, $unit_level_id) {
+    $this->db->select(array("volume"));
+    $query = $this->db->get_where(
+      $this->_units_levels_table,
+      array("id" => $unit_level_id, "unit_id" => $unit_id)
+    );
+    foreach ($query->result() as $row)
+    {
+      return $row->volume;
+    }
+    return NULL;
+  }
+
 }

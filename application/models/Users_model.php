@@ -49,22 +49,83 @@ class Users_model extends CI_Model {
     return $research_list;
   }
 
-  public function get_researchers_amount($user_id, $researcher_id)
+  public function get_researchers_amount($user_id)
   {
+    $this->load->model("units_model");
+    $researcher_id = $this->units_model->get_unit_id_by_name("researcher");
+
+    $user_unit_ids = array();
+    $this->db->select("id");
     $this->db->where("user_id", $user_id);
     $this->db->where("unit_id", $researcher_id);
     $this->db->where("rounds", 0);
     $this->db->from($this->_units_table);
-    $all_amount = $this->db->count_all_results();
+    $query = $this->db->get();
+    foreach ($query->result() as $row) {
+      $user_unit_ids[] = $row->id;
+    }
+    $all_amount = count($user_unit_ids);
 
     $this->db->where("user_id", $user_id);
-    $this->db->where("unit_id", $researcher_id);
+    $this->db->where_in("unit_id", $user_unit_ids);
     $this->db->from($this->_researchers_table);
     $active_amount = $this->db->count_all_results();
 
     return array(
       "active" => $active_amount,
       "inactive" => $all_amount - $active_amount
+    );
+  }
+
+  public function get_free_researchers($user_id, $researchers_needed)
+  {
+    $this->load->model("units_model");
+    $researcher_id = $this->units_model->get_unit_id_by_name("researcher");
+    $sql = sprintf(
+      "SELECT m.id, m.unit_id, m.level_id FROM %s AS m ".
+      "LEFT JOIN %s AS n ON (n.unit_id = m.id AND n.user_id = m.user_id) ".
+      "WHERE m.user_id = ? AND m.unit_id = ? AND m.rounds = ? ".
+      "AND n.research_id IS NULL ".
+      "ORDER BY m.level_id DESC ".
+      "LIMIT %s",
+      $this->_units_table, $this->_researchers_table,
+      $researchers_needed
+    );
+    $query = $this->db->query($sql, array($user_id, $researcher_id, 0));
+    $researchers = array();
+    foreach ($query->result() as $row)
+    {
+      $researchers[$row->id] = array(
+        "id" => $row->id, // use as unit_id in users_researchers
+        "volume" =>  $this->units_model->get_unit_volume(
+          $row->unit_id, $row->level_id
+        )
+      );
+    }
+    return $researchers;
+  }
+
+  public function add_researchers($user_id, $research_id, $researchers)
+  {
+    $result = TRUE;
+    foreach ($researchers as $id => $researcher)
+    {
+      $result = $result && $this->db->insert(
+        $this->_researchers_table,
+        array(
+          "unit_id" => $id,
+          "user_id" => $user_id,
+          "research_id" => $research_id
+        )
+      );
+    }
+    return $result;
+  }
+
+  public function remove_researchers($user_id, $research_id) {
+    return $this->db->delete(
+      $this->_researchers_table,
+      array("user_id" => $user_id, "research_id" => $research_id)
     );
   }
 
@@ -77,12 +138,16 @@ class Users_model extends CI_Model {
       );
       if ($researchers_needed > 0)
       {
-        // todo select/set researchers from available list
+        // get list of ids with volumes of free researchers
+        $free_researchers = $this->get_free_researchers($user_id, $researchers_needed);
+
         if (count($research_list) == 1)
         {
           $current_research = current($research_list);
+          $this->add_researchers($user_id, $current_research["id"], $free_researchers);
+
           $data = array(
-            // todo re-calc rest rounds by researchers
+            // todo re-calc rest rounds by researchers volume
             "rounds" => $current_research["rounds"],
             "time" => time()
           );
@@ -96,16 +161,21 @@ class Users_model extends CI_Model {
             "field_id" => $field_id,
             "field_level_id" => $field_level_id,
             "experience" => 0,
-            "rounds" => 10, // todo calc rounds by researchers
+            "rounds" => 10, // todo calc rounds by researchers volume
             "time" => time()
           );
-          return $this->db->insert($this->_research_table, $data);
+          $result = $this->db->insert($this->_research_table, $data);
+          if ($result == TRUE)
+            $this->add_researchers($user_id, $this->db->insert_id(), $free_researchers);
+          return $result;
         }
       }
       else if (count($research_list) == 1)
       {
         // pause research
         $current_research = current($research_list);
+        $this->remove_researchers($user_id, $current_research["id"]);
+
         $data = array(
           "time" => 0
         );

@@ -96,11 +96,9 @@ class Research_model extends CI_Model {
 
   public function start_research($field_id, $level_id)
   {
-    $this->load->model("units_model");
-    $researcher_id = $this->units_model->get_unit_id_by_name("researcher");
     $this->load->model("users_model");
     $researchers_amount = $this->users_model->get_researchers_amount(
-      $this->session->userdata("user_id"), $researcher_id
+      $this->session->userdata("user_id")
     );
 
     $this->db->select(array("researchers"));

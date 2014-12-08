@@ -29,9 +29,11 @@
           if (!empty($level["user"])):
             $experience = $level["user"]["experience"];
             $progress = (100/$level["experience"]) * $experience;
+            $rounds = $level["user"]["rounds"];
           else:
             $experience = 0;
             $progress = 0;
+            $rounds = 0;
           endif;
       ?>
     <tr>
@@ -43,11 +45,13 @@
           <?=$progress?>%
         </div>
       </div></td>
-      <td>0</td>
+      <td><?=$rounds?></td>
       <? if (empty($level["user"])): ?>
-        <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/start/<?=$field_id?>/<?=$level_id?>">Starten</a></td>
+      <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/start/<?=$field_id?>/<?=$level_id?>">Starten</a></td>
+      <? elseif ($level["user"]["time"] == 0): ?>
+      <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/start/<?=$field_id?>/<?=$level_id?>">Weiter</a></td>
       <? else: ?>
-      <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/stop/<?=$field_id?>/<?=$level_id?>">Stoppen</a></td>
+      <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/pause/<?=$field_id?>/<?=$level_id?>">Pausieren</a></td>
       <? endif; ?>
     </tr>
     <? endforeach;

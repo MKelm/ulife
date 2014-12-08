@@ -34,7 +34,7 @@ class Research_model extends CI_Model {
     return array();
   }
 
-  public function get_users_finalized_research_levels($field_id)
+  public function get_users_finished_research_levels($field_id)
   {
     $result = array();
     foreach ($this->_users_research_list as $entry) {
@@ -74,10 +74,10 @@ class Research_model extends CI_Model {
         $this->db->order_by("number", "asc");
         $this->db->where("field_id", $id);
 
-        $user_finalized_research_levels =
-          $this->get_users_finalized_research_levels($id);
-        if (count($user_finalized_research_levels) > 0)
-          $this->db->where_not_in("id", $user_finalized_research_levels);
+        $user_finished_research_levels =
+          $this->get_users_finished_research_levels($id);
+        if (count($user_finished_research_levels) > 0)
+          $this->db->where_not_in("id", $user_finished_research_levels);
         $query = $this->db->get($this->_levels_table, 1);
         $fields_list[$id]["levels"] = array();
         foreach ($query->result() as $row)
@@ -114,21 +114,20 @@ class Research_model extends CI_Model {
     }
     if ($researchers_needed <= $researchers_amount["inactive"])
     {
-      /*return $this->_user->updateResearch(
+      return $this->users_model->update_research(
+        $this->session->userdata("user_id"),
         $field_id, $level_id, $researchers_needed
-      );*/
-      return TRUE;
+      );
     }
-    else
-    {
-      return FALSE;
-    }
+    return FALSE;
   }
 
-  public function stop_research($field_id, $level_id)
+  public function pause_research($field_id, $level_id)
   {
-    //return $this->_user->updateResearch($field_id, $level_id, 0);
-    return TRUE;
+    $this->load->model("users_model");
+    return $this->users_model->update_research(
+      $this->session->userdata("user_id"), $field_id, $level_id, 0
+    );
   }
 
 }

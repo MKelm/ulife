@@ -28,9 +28,9 @@ class Research extends CI_Controller {
         $action_field_id, $action_level_id
       );
     }
-    else if ($action == "stop" && $action_field_id > 0 && $action_level_id > 0)
+    else if ($action == "pause" && $action_field_id > 0 && $action_level_id > 0)
     {
-      $data["action_status"] = $this->research_model->stop_research(
+      $data["action_status"] = $this->research_model->pause_research(
         $action_field_id, $action_level_id
       );
     }

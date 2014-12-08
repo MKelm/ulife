@@ -31,6 +31,8 @@ class Users_research_model extends CI_Model {
       $this->db->where(
         sprintf("field_level_id IN ('%s')", implode("','", $field_level_ids))
       );
+    $this->db->order_by("field_id", "asc");
+    $this->db->order_by("field_level_id", "asc");
     $query = $this->db->get($this->_research_table);
     $research_list = array();
     foreach ($query->result() as $row)

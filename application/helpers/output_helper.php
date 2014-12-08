@@ -88,3 +88,13 @@ if ( ! function_exists('get_numeric_time_value'))
       echo $value;
   }
 }
+
+if ( ! function_exists('debug'))
+{
+  function debug($value)
+  {
+    echo "<pre>";
+    print_r($value);
+    echo "</pre>";
+  }
+}

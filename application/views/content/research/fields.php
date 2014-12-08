@@ -11,6 +11,10 @@
 <? if ($action === "cancel" && $action_status == TRUE): ?>
 <div class="alert alert-success" role="alert">Forschung wurde erfolgreich abgebrochen!</div>
 <? endif; ?>
+<!-- no research fields message -->
+<? if (empty($research_fields)): ?>
+<div class="alert alert-success" role="alert">Keine Forschungsfelder verfügbar, bitte erforsche zuerst allgemeine Felder!</div>
+<? else: ?>
 <!-- research table -->
 <table class="table">
   <thead>
@@ -59,3 +63,4 @@
     endforeach; ?>
   </tbody>
 </table>
+<? endif; ?>

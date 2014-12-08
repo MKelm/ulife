@@ -34,7 +34,7 @@ class Research_model extends CI_Model {
     return array();
   }
 
-  public function get_users_finished_research_levels($field_id)
+  public function get_users_finished_research_levels($field_id, $full_data = FALSE)
   {
     $result = array();
     $this->load->model("update_model");
@@ -44,7 +44,10 @@ class Research_model extends CI_Model {
       if ($field_id == $entry["field_id"] &&
           $entry["end_round"] <= $config["round_number"])
       {
-        $result[] = $entry["field_level_id"];
+        if ($full_data)
+          $result[] = $entry;
+        else
+          $result[] = $entry["field_level_id"];
       }
     }
     return $result;
@@ -70,7 +73,27 @@ class Research_model extends CI_Model {
     }
     if (count($fields_list) > 0 && $with_levels === TRUE)
     {
-      $this->load_users_research_list(array_keys($fields_list));
+      $field_ids = array_keys($fields_list);
+      if ($parent_id > 0)
+        $field_ids[] = $parent_id;
+      $this->load_users_research_list($field_ids);
+      if ($parent_id > 0)
+      {
+        // get current level number by parent research field level
+        $max_number = 0;
+        $user_finished_parent_research_levels =
+          $this->get_users_finished_research_levels($parent_id);
+        if (!empty($user_finished_parent_research_levels))
+        {
+          $this->db->from($this->_levels_table);
+          $this->db->select("max(number) as max_number");
+          $this->db->where_in("id", $user_finished_parent_research_levels);
+          $query = $this->db->get();
+          foreach ($query->result() as $row)
+            $max_number = $row->max_number;
+        }
+      }
+
       foreach ($fields_list as $id => $field)
       {
         $user_finished_research_levels =
@@ -79,6 +102,8 @@ class Research_model extends CI_Model {
         $this->db->select(array("id", "number", "researchers", "experience"));
         $this->db->order_by("number", "asc");
         $this->db->where("field_id", $id);
+        if (isset($max_number))
+          $this->db->where("number", $max_number);
 
         if (count($user_finished_research_levels) > 0)
           $this->db->where_not_in("id", $user_finished_research_levels);
@@ -93,6 +118,8 @@ class Research_model extends CI_Model {
             "user" => $this->get_users_research_entry($id, $row->id)
           );
         }
+        if (empty($fields_list[$id]["levels"][$row->id]))
+          unset($fields_list[$id]);
       }
     }
     return $fields_list;

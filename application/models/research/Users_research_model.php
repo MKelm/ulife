@@ -95,8 +95,11 @@ class Users_research_model extends CI_Model {
     $this->db->where("m.user_id", $user_id);
     $this->db->where("m.unit_id", $researcher_id);
     $this->db->where("m.end_round <=", $config["round_number"]);
-    $query = $this->db->get();
+    $this->db->where("n.research_id", NULL);
+    $this->db->order_by("m.level_id", "desc");
+    $this->db->limit($researchers_needed);
 
+    $query = $this->db->get();
     $researchers = array();
     foreach ($query->result() as $row)
     {

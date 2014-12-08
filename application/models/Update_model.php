@@ -86,9 +86,9 @@ class Update_model extends CI_Model {
           array("rounds" => 0, "time" => $time)
         );
         // free researchers
-        $this->db->delete(
+        $result = $this->db->delete(
           $this->_users_researchers_table,
-          array("research_id", $id)
+          array("research_id" => $id)
         );
       }
     }

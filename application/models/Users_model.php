@@ -169,7 +169,7 @@ class Users_model extends CI_Model {
             "time" => time()
           );
           $result = $this->db->insert($this->_research_table, $data);
-          if ($result == TRUE)
+          if ($result == TRUE && $experience_needed > 0)
             $this->add_researchers($user_id, $this->db->insert_id(), $researchers);
           return $result;
         }

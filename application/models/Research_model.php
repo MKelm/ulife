@@ -66,7 +66,6 @@ class Research_model extends CI_Model {
     }
     if (count($fields_list) > 0 && $with_levels === TRUE)
     {
-
       $this->load_users_research_list(array_keys($fields_list));
       foreach ($fields_list as $id => $field)
       {
@@ -112,6 +111,7 @@ class Research_model extends CI_Model {
       $researchers_needed = $row->researchers;
       $experience_needed = $row->experience;
     }
+
     if ($researchers_needed <= $researchers_amount["inactive"])
     {
       return $this->users_model->update_research(

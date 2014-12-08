@@ -8,6 +8,7 @@ class Update_model extends CI_Model {
   private $_users_buildings_table = "users_buildings";
   private $_users_units_table = "users_units";
   private $_users_research_table = "users_research";
+  private $_users_researchers_table = "users_researchers";
 
   private $_config = array();
 
@@ -82,6 +83,11 @@ class Update_model extends CI_Model {
         $this->db->update(
           $this->_users_research_table,
           array("rounds" => 0, "time" => $time)
+        );
+        // free researchers
+        $this->db->delete(
+          $this->_users_researchers_table,
+          array("research_id", $id)
         );
       }
     }

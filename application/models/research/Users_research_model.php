@@ -9,10 +9,25 @@ class Users_research_model extends CI_Model {
 
   private $_researchers_table = "users_researchers";
 
+  private $_update_config = array();
+
   public function __construct()
   {
     parent::__construct();
     $this->load->database();
+  }
+
+  public function set_update_config($update_config = NULL)
+  {
+    if (!empty($update_config))
+    {
+      $this->_update_config = $update_config;
+    }
+    else
+    {
+      $this->load->model("update_model");
+      $this->_update_config = $this->update_model->load_config();
+    }
   }
 
   public function get_research_list(
@@ -53,14 +68,11 @@ class Users_research_model extends CI_Model {
     $this->load->model("units_model");
     $researcher_id = $this->units_model->get_unit_id_by_name("researcher");
 
-    $this->load->model("update_model");
-    $config = $this->update_model->load_config();
-
     $user_unit_ids = array();
     $this->db->select("id");
     $this->db->where("user_id", $user_id);
     $this->db->where("unit_id", $researcher_id);
-    $this->db->where("end_round <=", $config["round_number"]);
+    $this->db->where("end_round <=", $this->_update_config["round_number"]);
     $this->db->from($this->_units_table);
     $query = $this->db->get();
     foreach ($query->result() as $row) {
@@ -84,9 +96,6 @@ class Users_research_model extends CI_Model {
     $this->load->model("units_model");
     $researcher_id = $this->units_model->get_unit_id_by_name("researcher");
 
-    $this->load->model("update_model");
-    $config = $this->update_model->load_config();
-
     $this->db->select(array("m.id", "m.unit_id", "m.level_id"));
     $this->db->from($this->_units_table." as m");
     $this->db->join(
@@ -96,7 +105,7 @@ class Users_research_model extends CI_Model {
     );
     $this->db->where("m.user_id", $user_id);
     $this->db->where("m.unit_id", $researcher_id);
-    $this->db->where("m.end_round <=", $config["round_number"]);
+    $this->db->where("m.end_round <=", $this->_update_config["round_number"]);
     $this->db->where("n.research_id", NULL);
     $this->db->order_by("m.level_id", "desc");
     $this->db->limit($researchers_needed);
@@ -153,15 +162,12 @@ class Users_research_model extends CI_Model {
       foreach ($researchers as $researcher)
         $researchers_exp_volume += $researcher["volume"];
 
-      $this->load->model("update_model");
-      $config = $this->update_model->load_config();
-
       $data = array(
         "user_id" => $user_id,
         "field_id" => $field_id,
         "field_level_id" => $field_level_id,
-        "start_round" => $config["round_number"] + 1,
-        "end_round" => $config["round_number"] + 1 +
+        "start_round" => $this->_update_config["round_number"] + 1,
+        "end_round" => $this->_update_config["round_number"] + 1 +
           ceil($experience_needed / $researchers_exp_volume)
       );
       $result = $this->db->insert($this->_research_table, $data);

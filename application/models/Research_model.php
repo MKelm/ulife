@@ -9,15 +9,31 @@ class Research_model extends CI_Model {
 
   private $_users_research_list = array();
 
+  private $_update_config = array();
+
   public function __construct()
   {
     parent::__construct();
     $this->load->database();
   }
 
+  public function set_update_config($update_config = NULL)
+  {
+    if (!empty($update_config))
+    {
+      $this->_update_config = $update_config;
+    }
+    else
+    {
+      $this->load->model("update_model");
+      $this->_update_config = $this->update_model->load_config();
+    }
+  }
+
   public function load_users_research_list($field_ids = NULL)
   {
     $this->load->model("research/users_research_model", "users_model");
+    $this->users_model->set_update_config($this->_update_config);
     $this->_users_research_list = $this->users_model->get_research_list(
       $this->session->userdata("user_id"), $field_ids
     );
@@ -37,12 +53,10 @@ class Research_model extends CI_Model {
   public function get_users_finished_research_levels($field_id, $full_data = FALSE)
   {
     $result = array();
-    $this->load->model("update_model");
-    $config = $this->update_model->load_config();
 
     foreach ($this->_users_research_list as $entry) {
       if ($field_id == $entry["field_id"] &&
-          $entry["end_round"] <= $config["round_number"])
+          $entry["end_round"] <= $this->_update_config["round_number"])
       {
         if ($full_data)
           $result[] = $entry;
@@ -128,6 +142,7 @@ class Research_model extends CI_Model {
   public function start_research($field_id, $level_id)
   {
     $this->load->model("research/users_research_model", "users_model");
+    $this->users_model->set_update_config($this->_update_config);
     $researchers_amount = $this->users_model->get_researchers_amount(
       $this->session->userdata("user_id")
     );
@@ -157,6 +172,7 @@ class Research_model extends CI_Model {
   public function cancel_research($field_id, $level_id)
   {
     $this->load->model("research/users_research_model", "users_model");
+    $this->users_model->set_update_config($this->_update_config);
     return $this->users_model->update_research(
       $this->session->userdata("user_id"), $field_id, $level_id, 0, 0
     );

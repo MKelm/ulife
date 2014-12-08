@@ -22,6 +22,10 @@ class Research extends CI_Controller {
   {
     $this->load->model("research_model");
 
+    $this->load->model("update_model");
+    $config = $this->update_model->load_config();
+    $this->research_model->set_update_config($config);
+
     $data["action"] = $action;
     if ($action == "start" && $action_field_id > 0 && $action_level_id > 0)
     {
@@ -54,8 +58,7 @@ class Research extends CI_Controller {
         $data["main_research_fields"][$selected_field_id]["title"];
     }
 
-    $this->load->model("update_model");
-    $config = $this->update_model->load_config();
+
     $data["round_number"] = $config["round_number"];
     $data["update_interval"] = $config["update_interval"];
 

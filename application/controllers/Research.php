@@ -40,14 +40,20 @@ class Research extends CI_Controller {
       0, $selected_field_id == 0
     );
     if ($selected_field_id == 0)
+    {
       $data["research_fields"] = $data["main_research_fields"];
+      $this->view->title .= "Allgemein";
+    }
     else
+    {
       $data["research_fields"] = $this->research_model->get_fields_list(
         $selected_field_id, TRUE
       );
+      $this->view->title .=
+        $data["main_research_fields"][$selected_field_id]["title"];
+    }
 
     $this->view->data = $data;
-    $this->view->title .= "Allgemein";
     $this->view->page = "research/fields";
     $this->view->load();
   }

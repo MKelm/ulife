@@ -52,4 +52,39 @@ class Update_model extends CI_Model {
     return $this->db->count_all_results($this->_users_table);
   }
 
+  public function update_research($round_amount)
+  {
+    $users_research = array();
+    $this->db->select(array("id", "rounds"));
+    $this->db->where("rounds >", 0);
+    $this->db->from($this->_users_research_table);
+    $query = $this->db->get();
+    foreach ($query->result() as $row)
+      $users_research[$row->id] = $row->rounds;
+
+    foreach ($users_research as $id => $rounds)
+    {
+      $rounds_to_go = $rounds - $round_amount;
+      if ($rounds_to_go > 0) {
+        // update
+        $this->db->where("id", $id);
+        $this->db->update(
+          $this->_users_research_table, array("rounds" => $rounds_to_go)
+        );
+      } else {
+        if ($rounds_to_go < 0) {
+          $time = time() + $rounds_to_go * $this->_config["update_interval"];
+        } else {
+          $time = time();
+        }
+        // final update
+        $this->db->where("id", $id);
+        $this->db->update(
+          $this->_users_research_table,
+          array("rounds" => 0, "time" => $time)
+        );
+      }
+    }
+  }
+
 }

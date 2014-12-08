@@ -20,7 +20,7 @@ class Users_research_model extends CI_Model {
                   )
   {
     $this->db->select(
-      array("id", "field_id", "field_level_id", "experience", "rounds", "time")
+      array("id", "field_id", "field_level_id", "max_rounds", "rounds", "time")
     );
     $this->db->where("user_id", $user_id);
     if (count($field_ids) > 0)
@@ -39,7 +39,7 @@ class Users_research_model extends CI_Model {
         "id" => $row->id,
         "field_id" => $row->field_id,
         "field_level_id" => $row->field_level_id,
-        "experience" => $row->experience,
+        "max_rounds" => $row->max_rounds,
         "rounds" => $row->rounds,
         "time" => $row->time
       );
@@ -158,12 +158,13 @@ class Users_research_model extends CI_Model {
         }
         else
         {
+          $max_rounds = ceil($experience_needed / $researchers_exp_volume);
           $data = array(
             "user_id" => $user_id,
             "field_id" => $field_id,
             "field_level_id" => $field_level_id,
-            "experience" => $experience_needed,
-            "rounds" => ceil($experience_needed / $researchers_exp_volume),
+            "max_rounds" => $max_rounds,
+            "rounds" => $max_rounds,
             "time" => time()
           );
           $result = $this->db->insert($this->_research_table, $data);

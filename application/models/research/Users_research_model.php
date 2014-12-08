@@ -20,7 +20,7 @@ class Users_research_model extends CI_Model {
                   )
   {
     $this->db->select(
-      array("id", "field_id", "field_level_id", "start_time", "end_time")
+      array("id", "field_id", "field_level_id", "start_round", "end_round")
     );
     $this->db->where("user_id", $user_id);
     if (count($field_ids) > 0)
@@ -39,8 +39,8 @@ class Users_research_model extends CI_Model {
         "id" => $row->id,
         "field_id" => $row->field_id,
         "field_level_id" => $row->field_level_id,
-        "start_time" => $row->start_time,
-        "end_time" => $row->end_time
+        "start_round" => $row->start_round,
+        "end_round" => $row->end_round
       );
     }
     return $research_list;
@@ -51,11 +51,14 @@ class Users_research_model extends CI_Model {
     $this->load->model("units_model");
     $researcher_id = $this->units_model->get_unit_id_by_name("researcher");
 
+    $this->load->model("update_model");
+    $config = $this->update_model->load_config();
+
     $user_unit_ids = array();
     $this->db->select("id");
     $this->db->where("user_id", $user_id);
     $this->db->where("unit_id", $researcher_id);
-    $this->db->where("end_time <=", time());
+    $this->db->where("end_round <=", $config["round_number"]);
     $this->db->from($this->_units_table);
     $query = $this->db->get();
     foreach ($query->result() as $row) {
@@ -78,17 +81,23 @@ class Users_research_model extends CI_Model {
   {
     $this->load->model("units_model");
     $researcher_id = $this->units_model->get_unit_id_by_name("researcher");
+
+    $this->load->model("update_model");
+    $config = $this->update_model->load_config();
+
     $sql = sprintf(
       "SELECT m.id, m.unit_id, m.level_id FROM %s AS m ".
       "LEFT JOIN %s AS n ON (n.unit_id = m.id AND n.user_id = m.user_id) ".
-      "WHERE m.user_id = ? AND m.unit_id = ? AND m.end_time <= ? ".
+      "WHERE m.user_id = ? AND m.unit_id = ? AND m.end_round <= ? ".
       "AND n.research_id IS NULL ".
       "ORDER BY m.level_id DESC ".
       "LIMIT %s",
       $this->_units_table, $this->_researchers_table,
       $researchers_needed
     );
-    $query = $this->db->query($sql, array($user_id, $researcher_id, time()));
+    $query = $this->db->query(
+      $sql, array($user_id, $researcher_id, $config["round_number"])
+    );
     $researchers = array();
     foreach ($query->result() as $row)
     {
@@ -142,15 +151,14 @@ class Users_research_model extends CI_Model {
 
       $this->load->model("update_model");
       $config = $this->update_model->load_config();
-      $start_time = $config["update_time"] + $config["update_interval"];
 
       $data = array(
         "user_id" => $user_id,
         "field_id" => $field_id,
         "field_level_id" => $field_level_id,
-        "start_time" => $start_time,
-        "end_time" => $start_time + ceil($experience_needed / $researchers_exp_volume) *
-          $config["update_interval"]
+        "start_round" => $config["round_number"] + 1,
+        "end_round" => $config["round_number"] + 1 +
+          ceil($experience_needed / $researchers_exp_volume)
       );
       $result = $this->db->insert($this->_research_table, $data);
       if ($result == TRUE && $experience_needed > 0)

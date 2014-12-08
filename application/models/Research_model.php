@@ -37,9 +37,12 @@ class Research_model extends CI_Model {
   public function get_users_finished_research_levels($field_id)
   {
     $result = array();
-    $time = time();
+    $this->load->model("update_model");
+    $config = $this->update_model->load_config();
+
     foreach ($this->_users_research_list as $entry) {
-      if ($field_id == $entry["field_id"] && $entry["end_time"] <= $time)
+      if ($field_id == $entry["field_id"] &&
+          $entry["end_round"] <= $config["round_number"])
       {
         $result[] = $entry["field_level_id"];
       }
@@ -70,12 +73,13 @@ class Research_model extends CI_Model {
       $this->load_users_research_list(array_keys($fields_list));
       foreach ($fields_list as $id => $field)
       {
+        $user_finished_research_levels =
+          $this->get_users_finished_research_levels($id);
+
         $this->db->select(array("id", "number", "researchers", "experience"));
         $this->db->order_by("number", "asc");
         $this->db->where("field_id", $id);
 
-        $user_finished_research_levels =
-          $this->get_users_finished_research_levels($id);
         if (count($user_finished_research_levels) > 0)
           $this->db->where_not_in("id", $user_finished_research_levels);
         $query = $this->db->get($this->_levels_table, 1);

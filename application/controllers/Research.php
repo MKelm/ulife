@@ -54,6 +54,11 @@ class Research extends CI_Controller {
         $data["main_research_fields"][$selected_field_id]["title"];
     }
 
+    $this->load->model("update_model");
+    $config = $this->update_model->load_config();
+    $data["round_number"] = $config["round_number"];
+    $data["update_interval"] = $config["update_interval"];
+
     $this->view->data = $data;
     $this->view->page = "research/fields";
     $this->view->load();

@@ -27,10 +27,10 @@
     <? foreach ($research_fields as $field_id => $field):
         foreach ($field["levels"] as $level_id => $level):
           if (!empty($level["user"])):
-            $time = $level["user"]["end_time"] - time();
+            $time = ($level["user"]["end_round"] - $round_number) * $update_interval;
             $progress = 100 -
-              (100/($level["user"]["end_time"] - $level["user"]["start_time"])) *
-                ($level["user"]["end_time"] - time());
+              (100/($level["user"]["end_round"] - $level["user"]["start_round"]))
+                * ($level["user"]["end_round"] - $round_number);
           else:
             $progress = 0;
             $time = 0;

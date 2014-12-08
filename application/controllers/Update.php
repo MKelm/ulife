@@ -19,20 +19,20 @@ class Update extends CI_Controller {
       if (isset($config["update_time"]) &&
           $config["update_time"] < time() - $config["update_interval"])
       {
-
+        // update round number
         if ($config["update_time"] > 0)
         {
           $data["round_amount"] = floor(
             (time() - $config["update_time"]) / $config["update_interval"]
           );
         }
-
-        // update research
-        $this->update_model->update_research($data["round_amount"]);
-
-        // update config
         $config["round_number"] += $data["round_amount"];
         $this->update_model->set_config("round_number", $config["round_number"]);
+
+        // update research
+        $this->update_model->update_research();
+
+        // update config
         $this->update_model->set_config(
           "users_amount", $this->update_model->get_users_amount()
         );

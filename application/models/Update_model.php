@@ -54,12 +54,13 @@ class Update_model extends CI_Model {
     return $this->db->count_all_results($this->_users_table);
   }
 
-  public function update_research($round_amount)
+  public function update_research()
   {
+
     $finished_research = array();
     $this->db->select(array("id"));
-    $this->db->where("start_time >", 0);
-    $this->db->where("end_time <=", time());
+    $this->db->where("start_round >", 0);
+    $this->db->where("end_round <=", $this->_config["round_number"]);
     $this->db->from($this->_users_research_table);
     $query = $this->db->get();
     foreach ($query->result() as $row) {
@@ -72,7 +73,7 @@ class Update_model extends CI_Model {
       $this->db->where("id", $id);
       $this->db->update(
         $this->_users_research_table,
-        array("start_time" => 0)
+        array("start_round" => 0)
       );
       // free researchers
       $result = $this->db->delete(

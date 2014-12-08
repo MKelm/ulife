@@ -54,6 +54,7 @@ class Research extends CI_Controller {
         $data["main_research_fields"][$selected_field_id]["title"];
     }
 
+    $data["update_inverval"] = $this->config->item("update_interval");
     $this->view->data = $data;
     $this->view->page = "research/fields";
     $this->view->load();

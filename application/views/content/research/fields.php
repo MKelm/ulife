@@ -19,7 +19,7 @@
       <th>Level</th>
       <th>Forscher</th>
       <th>Fortschritt</th>
-      <th>Restrunden</th>
+      <th>Restzeit</th>
       <th></th>
     </tr>
   </thead>
@@ -29,10 +29,10 @@
           if (!empty($level["user"])):
             $progress = (100/$level["user"]["max_rounds"]) *
               ($level["user"]["max_rounds"] - $level["user"]["rounds"]);
-            $rounds = $level["user"]["rounds"];
+            $time = $update_inverval * $level["user"]["rounds"];
           else:
             $progress = 0;
-            $rounds = 0;
+            $time = 0;
           endif;
       ?>
     <tr>
@@ -44,7 +44,7 @@
           <?=get_numeric_value($progress)?>%
         </div>
       </div></td>
-      <td><?=$rounds?></td>
+      <td><?=get_numeric_time_value($time)?></td>
       <? if (empty($level["user"])): ?>
       <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/start/<?=$field_id?>/<?=$level_id?>">Starten</a></td>
       <? elseif ($level["user"]["time"] == 0): ?>

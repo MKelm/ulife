@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+// ROUNDS
+$config["update_interval"] = 60;
+
 // REGISTRATION CONFIRMATION EMAIL
 $config["send_regc_email"] = FALSE;
 $config["regc_email_from_addr"] = "ulifeci@shrt.ws";

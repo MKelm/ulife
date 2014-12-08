@@ -28,6 +28,7 @@ class Update_model extends CI_Model {
     {
       $this->_config[$row->name] = $row->value;
     }
+    $this->_config["update_interval"] = $this->config->item("update_interval");
     return $this->_config;
   }
 

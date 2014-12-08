@@ -103,7 +103,7 @@ class Research_model extends CI_Model {
         $this->db->order_by("number", "asc");
         $this->db->where("field_id", $id);
         if (isset($max_number))
-          $this->db->where("number", $max_number);
+          $this->db->where("number <=", $max_number);
 
         if (count($user_finished_research_levels) > 0)
           $this->db->where_not_in("id", $user_finished_research_levels);

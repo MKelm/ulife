@@ -32,9 +32,13 @@
         foreach ($field["levels"] as $level_id => $level):
           if (!empty($level["user"])):
             $time = ($level["user"]["end_round"] - $round_number) * $update_interval;
-            $progress = 100 -
-              (100/($level["user"]["end_round"] - $level["user"]["start_round"]))
-                * ($level["user"]["end_round"] - $round_number);
+            $round_diff = $level["user"]["end_round"] - $level["user"]["start_round"];
+            if ($round_diff > 0):
+              $progress = 100 -
+                (100/$round_diff) * ($level["user"]["end_round"] - $round_number);
+            else:
+              $progress = 100;
+            endif;
             if ($progress < 0):
               $progress = 0;
             endif;

@@ -29,9 +29,9 @@ class Research extends CI_Controller {
         $action_field_id, $action_level_id
       );
     }
-    else if ($action == "pause" && $action_field_id > 0 && $action_level_id > 0)
+    else if ($action == "cancel" && $action_field_id > 0 && $action_level_id > 0)
     {
-      $data["action_status"] = $this->research_model->pause_research(
+      $data["action_status"] = $this->research_model->cancel_research(
         $action_field_id, $action_level_id
       );
     }
@@ -54,7 +54,6 @@ class Research extends CI_Controller {
         $data["main_research_fields"][$selected_field_id]["title"];
     }
 
-    $data["update_inverval"] = $this->config->item("update_interval");
     $this->view->data = $data;
     $this->view->page = "research/fields";
     $this->view->load();

@@ -5,11 +5,11 @@
 <? if ($action === "start" && $action_status == TRUE): ?>
 <div class="alert alert-success" role="alert">Forschung wurde erfolgreich gestartet!</div>
 <? endif; ?>
-<? if ($action === "pause" && $action_status == FALSE): ?>
-<div class="alert alert-danger" role="alert">Forschung konnte nicht pausiert werden!</div>
+<? if ($action === "cancel" && $action_status == FALSE): ?>
+<div class="alert alert-danger" role="alert">Forschung konnte nicht abgebrochen werden!</div>
 <? endif; ?>
-<? if ($action === "pause" && $action_status == TRUE): ?>
-<div class="alert alert-success" role="alert">Forschung wurde erfolgreich pausiert!</div>
+<? if ($action === "cancel" && $action_status == TRUE): ?>
+<div class="alert alert-success" role="alert">Forschung wurde erfolgreich abgebrochen!</div>
 <? endif; ?>
 <!-- research table -->
 <table class="table">
@@ -27,9 +27,10 @@
     <? foreach ($research_fields as $field_id => $field):
         foreach ($field["levels"] as $level_id => $level):
           if (!empty($level["user"])):
-            $progress = (100/$level["user"]["max_rounds"]) *
-              ($level["user"]["max_rounds"] - $level["user"]["rounds"]);
-            $time = $update_inverval * $level["user"]["rounds"];
+            $time = $level["user"]["end_time"] - time();
+            $progress = 100 -
+              (100/($level["user"]["end_time"] - $level["user"]["start_time"])) *
+                ($level["user"]["end_time"] - time());
           else:
             $progress = 0;
             $time = 0;
@@ -47,10 +48,8 @@
       <td><?=get_numeric_time_value($time)?></td>
       <? if (empty($level["user"])): ?>
       <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/start/<?=$field_id?>/<?=$level_id?>">Starten</a></td>
-      <? elseif ($level["user"]["time"] == 0): ?>
-      <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/start/<?=$field_id?>/<?=$level_id?>">Weiter</a></td>
       <? else: ?>
-      <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/pause/<?=$field_id?>/<?=$level_id?>">Pausieren</a></td>
+      <td><a href="<?=base_url()?>research/fields/<?=$selected_field_id?>/cancel/<?=$field_id?>/<?=$level_id?>">Abbrechen</a></td>
       <? endif; ?>
     </tr>
     <? endforeach;

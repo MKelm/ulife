@@ -20,7 +20,7 @@ class Users_research_model extends CI_Model {
                   )
   {
     $this->db->select(
-      array("id", "field_id", "field_level_id", "max_rounds", "rounds", "time")
+      array("id", "field_id", "field_level_id", "start_time", "end_time")
     );
     $this->db->where("user_id", $user_id);
     if (count($field_ids) > 0)
@@ -39,9 +39,8 @@ class Users_research_model extends CI_Model {
         "id" => $row->id,
         "field_id" => $row->field_id,
         "field_level_id" => $row->field_level_id,
-        "max_rounds" => $row->max_rounds,
-        "rounds" => $row->rounds,
-        "time" => $row->time
+        "start_time" => $row->start_time,
+        "end_time" => $row->end_time
       );
     }
     return $research_list;
@@ -56,7 +55,7 @@ class Users_research_model extends CI_Model {
     $this->db->select("id");
     $this->db->where("user_id", $user_id);
     $this->db->where("unit_id", $researcher_id);
-    $this->db->where("rounds", 0);
+    $this->db->where("end_time <=", time());
     $this->db->from($this->_units_table);
     $query = $this->db->get();
     foreach ($query->result() as $row) {
@@ -82,14 +81,14 @@ class Users_research_model extends CI_Model {
     $sql = sprintf(
       "SELECT m.id, m.unit_id, m.level_id FROM %s AS m ".
       "LEFT JOIN %s AS n ON (n.unit_id = m.id AND n.user_id = m.user_id) ".
-      "WHERE m.user_id = ? AND m.unit_id = ? AND m.rounds = ? ".
+      "WHERE m.user_id = ? AND m.unit_id = ? AND m.end_time <= ? ".
       "AND n.research_id IS NULL ".
       "ORDER BY m.level_id DESC ".
       "LIMIT %s",
       $this->_units_table, $this->_researchers_table,
       $researchers_needed
     );
-    $query = $this->db->query($sql, array($user_id, $researcher_id, 0));
+    $query = $this->db->query($sql, array($user_id, $researcher_id, time()));
     $researchers = array();
     foreach ($query->result() as $row)
     {
@@ -131,10 +130,7 @@ class Users_research_model extends CI_Model {
                     $user_id, $field_id, $field_level_id,
                     $researchers_needed, $experience_needed
                   ) {
-    // re/start or stop research
-    $research_list = $this->get_research_list(
-      $user_id, array($field_id), array($field_level_id)
-    );
+    // start or stop research
     if ($researchers_needed > 0)
     {
       // get list of ids with volumes of free researchers
@@ -144,51 +140,36 @@ class Users_research_model extends CI_Model {
       foreach ($researchers as $researcher)
         $researchers_exp_volume += $researcher["volume"];
 
-      if (count($research_list) == 1)
-      {
-        $current_research = current($research_list);
-        $this->add_researchers($user_id, $current_research["id"], $researchers);
+      $this->load->model("update_model");
+      $config = $this->update_model->load_config();
+      $start_time = $config["update_time"] + $config["update_interval"];
 
-        $old_process = (1/$current_research["max_rounds"]) *
-          $current_research["rounds"];
+      $data = array(
+        "user_id" => $user_id,
+        "field_id" => $field_id,
+        "field_level_id" => $field_level_id,
+        "start_time" => $start_time,
+        "end_time" => $start_time + ceil($experience_needed / $researchers_exp_volume) *
+          $config["update_interval"]
+      );
+      $result = $this->db->insert($this->_research_table, $data);
+      if ($result == TRUE && $experience_needed > 0)
+        $this->add_researchers($user_id, $this->db->insert_id(), $researchers);
+      return $result;
 
-        $new_max_rounds = ceil($experience_needed / $researchers_exp_volume);
-        $data = array(
-          "max_rounds" => $new_max_rounds,
-          "rounds" => ceil($new_max_rounds * $old_process),
-          "time" => time()
-        );
-        $this->db->where("id", $current_research["id"]);
-        return $this->db->update($this->_research_table, $data);
-      }
-      else
-      {
-        $max_rounds = ceil($experience_needed / $researchers_exp_volume);
-        $data = array(
-          "user_id" => $user_id,
-          "field_id" => $field_id,
-          "field_level_id" => $field_level_id,
-          "max_rounds" => $max_rounds,
-          "rounds" => $max_rounds,
-          "time" => time()
-        );
-        $result = $this->db->insert($this->_research_table, $data);
-        if ($result == TRUE && $experience_needed > 0)
-          $this->add_researchers($user_id, $this->db->insert_id(), $researchers);
-        return $result;
-      }
     }
-    else if (count($research_list) == 1)
+    else
     {
-      // pause research
+      $research_list = $this->get_research_list(
+        $user_id, array($field_id), array($field_level_id)
+      );
+      // stop research
       $current_research = current($research_list);
       $this->remove_researchers($user_id, $current_research["id"]);
 
-      $data = array(
-        "time" => 0
+      return $this->db->delete(
+        $this->_research_table, array("id" => $current_research["id"])
       );
-      $this->db->where("id", $current_research["id"]);
-      return $this->db->update($this->_research_table, $data);
     }
   }
 }

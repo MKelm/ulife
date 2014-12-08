@@ -37,8 +37,9 @@ class Research_model extends CI_Model {
   public function get_users_finished_research_levels($field_id)
   {
     $result = array();
+    $time = time();
     foreach ($this->_users_research_list as $entry) {
-      if ($field_id == $entry["field_id"] && $entry["rounds"] == 0)
+      if ($field_id == $entry["field_id"] && $entry["end_time"] <= $time)
       {
         $result[] = $entry["field_level_id"];
       }
@@ -122,7 +123,7 @@ class Research_model extends CI_Model {
     return FALSE;
   }
 
-  public function pause_research($field_id, $level_id)
+  public function cancel_research($field_id, $level_id)
   {
     $this->load->model("research/users_research_model", "users_model");
     return $this->users_model->update_research(

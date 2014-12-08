@@ -56,41 +56,29 @@ class Update_model extends CI_Model {
 
   public function update_research($round_amount)
   {
-    $users_research = array();
-    $this->db->select(array("id", "rounds"));
-    $this->db->where("rounds >", 0);
+    $finished_research = array();
+    $this->db->select(array("id"));
+    $this->db->where("start_time >", 0);
+    $this->db->where("end_time <=", time());
     $this->db->from($this->_users_research_table);
     $query = $this->db->get();
-    foreach ($query->result() as $row)
-      $users_research[$row->id] = $row->rounds;
+    foreach ($query->result() as $row) {
+      $finished_research[] = $row->id;
+    }
 
-    foreach ($users_research as $id => $rounds)
+    foreach ($finished_research as $id)
     {
-      $rounds_to_go = $rounds - $round_amount;
-      if ($rounds_to_go > 0) {
-        // update
-        $this->db->where("id", $id);
-        $this->db->update(
-          $this->_users_research_table, array("rounds" => $rounds_to_go)
-        );
-      } else {
-        if ($rounds_to_go < 0) {
-          $time = time() + $rounds_to_go * $this->_config["update_interval"];
-        } else {
-          $time = time();
-        }
-        // final update
-        $this->db->where("id", $id);
-        $this->db->update(
-          $this->_users_research_table,
-          array("rounds" => 0, "time" => $time)
-        );
-        // free researchers
-        $result = $this->db->delete(
-          $this->_users_researchers_table,
-          array("research_id" => $id)
-        );
-      }
+      // final update
+      $this->db->where("id", $id);
+      $this->db->update(
+        $this->_users_research_table,
+        array("start_time" => 0)
+      );
+      // free researchers
+      $result = $this->db->delete(
+        $this->_users_researchers_table,
+        array("research_id" => $id)
+      );
     }
   }
 

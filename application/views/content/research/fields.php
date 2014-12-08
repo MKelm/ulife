@@ -5,11 +5,11 @@
 <? if ($action === "start" && $action_status == TRUE): ?>
 <div class="alert alert-success" role="alert">Forschung wurde erfolgreich gestartet!</div>
 <? endif; ?>
-<? if ($action === "stop" && $action_status == FALSE): ?>
-<div class="alert alert-danger" role="alert">Forschung konnte nicht gestoppt werden!</div>
+<? if ($action === "pause" && $action_status == FALSE): ?>
+<div class="alert alert-danger" role="alert">Forschung konnte nicht pausiert werden!</div>
 <? endif; ?>
-<? if ($action === "stop" && $action_status == TRUE): ?>
-<div class="alert alert-success" role="alert">Forschung wurde erfolgreich gestoppt!</div>
+<? if ($action === "pause" && $action_status == TRUE): ?>
+<div class="alert alert-success" role="alert">Forschung wurde erfolgreich pausiert!</div>
 <? endif; ?>
 <!-- research table -->
 <table class="table">

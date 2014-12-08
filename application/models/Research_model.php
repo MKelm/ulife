@@ -100,12 +100,12 @@ class Research_model extends CI_Model {
       $this->session->userdata("user_id")
     );
 
+    $researchers_needed = 0;
+    $experience_needed = 0;
     $this->db->select(array("researchers", "experience"));
     $query = $this->db->get_where(
       $this->_levels_table, array("id" => $level_id, "field_id" => $field_id)
     );
-    $researchers_needed = 0;
-    $experience_needed = 0;
     foreach ($query->result() as $row)
     {
       $researchers_needed = $row->researchers;

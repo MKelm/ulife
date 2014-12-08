@@ -149,8 +149,13 @@ class Users_research_model extends CI_Model {
           $current_research = current($research_list);
           $this->add_researchers($user_id, $current_research["id"], $researchers);
 
+          $old_process = (1/$current_research["max_rounds"]) *
+            $current_research["rounds"];
+
+          $new_max_rounds = ceil($experience_needed / $researchers_exp_volume);
           $data = array(
-            "rounds" => ceil($current_research["experience"] / $researchers_exp_volume),
+            "max_rounds" => $new_max_rounds,
+            "rounds" => ceil($new_max_rounds * $old_process),
             "time" => time()
           );
           $this->db->where("id", $current_research["id"]);

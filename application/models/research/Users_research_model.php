@@ -131,64 +131,64 @@ class Users_research_model extends CI_Model {
                     $user_id, $field_id, $field_level_id,
                     $researchers_needed, $experience_needed
                   ) {
-      // re/start or stop research
-      $research_list = $this->get_research_list(
-        $user_id, array($field_id), array($field_level_id)
-      );
-      if ($researchers_needed > 0)
+    // re/start or stop research
+    $research_list = $this->get_research_list(
+      $user_id, array($field_id), array($field_level_id)
+    );
+    if ($researchers_needed > 0)
+    {
+      // get list of ids with volumes of free researchers
+      $researchers = $this->get_free_researchers($user_id, $researchers_needed);
+      // get exp volume per round by researcher volumes
+      $researchers_exp_volume = 0;
+      foreach ($researchers as $researcher)
+        $researchers_exp_volume += $researcher["volume"];
+
+      if (count($research_list) == 1)
       {
-        // get list of ids with volumes of free researchers
-        $researchers = $this->get_free_researchers($user_id, $researchers_needed);
-        // get exp volume per round by researcher volumes
-        $researchers_exp_volume = 0;
-        foreach ($researchers as $researcher)
-          $researchers_exp_volume += $researcher["volume"];
-
-        if (count($research_list) == 1)
-        {
-          $current_research = current($research_list);
-          $this->add_researchers($user_id, $current_research["id"], $researchers);
-
-          $old_process = (1/$current_research["max_rounds"]) *
-            $current_research["rounds"];
-
-          $new_max_rounds = ceil($experience_needed / $researchers_exp_volume);
-          $data = array(
-            "max_rounds" => $new_max_rounds,
-            "rounds" => ceil($new_max_rounds * $old_process),
-            "time" => time()
-          );
-          $this->db->where("id", $current_research["id"]);
-          return $this->db->update($this->_research_table, $data);
-        }
-        else
-        {
-          $max_rounds = ceil($experience_needed / $researchers_exp_volume);
-          $data = array(
-            "user_id" => $user_id,
-            "field_id" => $field_id,
-            "field_level_id" => $field_level_id,
-            "max_rounds" => $max_rounds,
-            "rounds" => $max_rounds,
-            "time" => time()
-          );
-          $result = $this->db->insert($this->_research_table, $data);
-          if ($result == TRUE && $experience_needed > 0)
-            $this->add_researchers($user_id, $this->db->insert_id(), $researchers);
-          return $result;
-        }
-      }
-      else if (count($research_list) == 1)
-      {
-        // pause research
         $current_research = current($research_list);
-        $this->remove_researchers($user_id, $current_research["id"]);
+        $this->add_researchers($user_id, $current_research["id"], $researchers);
 
+        $old_process = (1/$current_research["max_rounds"]) *
+          $current_research["rounds"];
+
+        $new_max_rounds = ceil($experience_needed / $researchers_exp_volume);
         $data = array(
-          "time" => 0
+          "max_rounds" => $new_max_rounds,
+          "rounds" => ceil($new_max_rounds * $old_process),
+          "time" => time()
         );
         $this->db->where("id", $current_research["id"]);
         return $this->db->update($this->_research_table, $data);
       }
+      else
+      {
+        $max_rounds = ceil($experience_needed / $researchers_exp_volume);
+        $data = array(
+          "user_id" => $user_id,
+          "field_id" => $field_id,
+          "field_level_id" => $field_level_id,
+          "max_rounds" => $max_rounds,
+          "rounds" => $max_rounds,
+          "time" => time()
+        );
+        $result = $this->db->insert($this->_research_table, $data);
+        if ($result == TRUE && $experience_needed > 0)
+          $this->add_researchers($user_id, $this->db->insert_id(), $researchers);
+        return $result;
+      }
     }
+    else if (count($research_list) == 1)
+    {
+      // pause research
+      $current_research = current($research_list);
+      $this->remove_researchers($user_id, $current_research["id"]);
+
+      $data = array(
+        "time" => 0
+      );
+      $this->db->where("id", $current_research["id"]);
+      return $this->db->update($this->_research_table, $data);
+    }
+  }
 }

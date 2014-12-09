@@ -36,7 +36,7 @@ class Units_model extends CI_Model {
         $list[$id]["levels"] = array();
         $this->db->select(
           array(
-            "id", "number", "rl_number", "t_coins", "t_rounds", "volume"
+            "id", "number", "r_level_id", "t_coins", "t_rounds", "volume"
           )
         );
         $this->db->from($this->_levels_table);
@@ -48,7 +48,7 @@ class Units_model extends CI_Model {
           $list[$id]["levels"][$row->id] = array(
             "id" => $row->id,
             "number" => $row->number,
-            "rl_number" => $row->rl_number,
+            "r_level_id" => $row->r_level_id,
             "t_coins" => $row->t_coins,
             "t_rounds" => $row->t_rounds,
             "volume" => $row->volume

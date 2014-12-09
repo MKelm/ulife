@@ -21,6 +21,8 @@ class Import_model extends CI_Model {
   private $_users_researchers_table = "users_researchers";
 
   private $_main_research_fields_ids = array();
+  private $_sub_research_fields = array();
+
   private $_building_ids = array();
   private $_unit_ids = array();
 
@@ -120,6 +122,12 @@ class Import_model extends CI_Model {
             $this->_research_fields_table, $data
           );
           $sub_field_id = $this->db->insert_id();
+          // keep sub research fields to set buildings/units min level ids
+          $sub_field_name = $data["name"];
+          $this->_sub_research_fields[$sub_field_name] = array(
+            "id" => $sub_field_id,
+            "num_level_ids" => array()
+          );
           foreach ($xml->research->levels->level as $level)
           {
             $level_attributes = $level->attributes();
@@ -132,6 +140,8 @@ class Import_model extends CI_Model {
             $this->db->insert(
               $this->_research_levels_table, $data
             );
+            $this->_sub_research_fields[$sub_field_name]["num_level_ids"][(int)$level_attributes->num]
+              = $this->db->insert_id();
           }
         }
       }
@@ -155,13 +165,15 @@ class Import_model extends CI_Model {
       );
       $building_id = $this->db->insert_id();
       $this->_building_ids[$data["name"]] = $building_id;
+      $building_name = $data["name"];
       foreach ($xml->levels->level as $level)
       {
         $level_attributes = $level->attributes();
+        // get level id depending on rl_number
         $data = array(
           "building_id" => $building_id,
           "number" => (int)$level_attributes["num"],
-          "rl_number" => (int)$level_attributes["rl-num"],
+          "r_level_id" => (int)$this->_sub_research_fields[$building_name]["num_level_ids"][(int)$level_attributes["rl-num"]],
           "c_wood" => (int)$level_attributes["c-wood"],
           "c_stones" => (int)$level_attributes["c-wood"],
           "c_workers" => (int)$level_attributes["c-workers"],
@@ -192,13 +204,15 @@ class Import_model extends CI_Model {
       );
       $unit_id = $this->db->insert_id();
       $this->_unit_ids[$data["name"]] = $unit_id;
+      $unit_name = $data["name"];
       foreach ($xml->levels->level as $level)
       {
         $level_attributes = $level->attributes();
+        // get level id depending on rl_number
         $data = array(
           "unit_id" => $unit_id,
           "number" => (int)$level_attributes["num"],
-          "rl_number" => (int)$level_attributes["rl-num"],
+          "r_level_id" => (int)$this->_sub_research_fields[$unit_name]["num_level_ids"][(int)$level_attributes["rl-num"]],
           "t_coins" => (int)$level_attributes["t-coins"],
           "t_rounds" => (int)$level_attributes["t-rounds"],
           "volume" => (int)$level_attributes["volume"]

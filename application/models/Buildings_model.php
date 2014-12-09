@@ -36,7 +36,7 @@ class Buildings_model extends CI_Model {
         $list[$id]["levels"] = array();
         $this->db->select(
           array(
-            "id", "number", "rl_number", "c_wood", "c_stones", "c_workers",
+            "id", "number", "r_level_id", "c_wood", "c_stones", "c_workers",
             "c_rounds", "volume"
           )
         );
@@ -49,7 +49,7 @@ class Buildings_model extends CI_Model {
           $list[$id]["levels"][$row->id] = array(
             "id" => $row->id,
             "number" => $row->number,
-            "rl_number" => $row->rl_number,
+            "r_level_id" => $row->r_level_id,
             "c_wood" => $row->c_wood,
             "c_stones" => $row->c_stones,
             "c_workers" => $row->c_workers,

@@ -49,8 +49,9 @@ class Units_model extends CI_Model {
             "inner"
           );
 
-        $this->db->order_by("ul.number", "asc");
+        $this->db->order_by("ul.number", "desc");
         $this->db->where("ul.unit_id", $id);
+        $this->db->limit(1);
         $query = $this->db->get();
         foreach ($query->result() as $row)
         {

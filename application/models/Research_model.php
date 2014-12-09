@@ -67,6 +67,26 @@ class Research_model extends CI_Model {
     return $result;
   }
 
+  // get current max level number by parent research field level
+  public function get_fields_level_max_number($parent_id, $field_ids = array())
+  {
+    if (!empty($field_ids))
+      $this->load_users_research_list($field_ids);
+    $max_number = 0;
+    $user_finished_parent_research_levels =
+      $this->get_users_finished_research_levels($parent_id);
+    if (!empty($user_finished_parent_research_levels))
+    {
+      $this->db->from($this->_levels_table);
+      $this->db->select("max(number) as max_number");
+      $this->db->where_in("id", $user_finished_parent_research_levels);
+      $query = $this->db->get();
+      foreach ($query->result() as $row)
+        $max_number = $row->max_number;
+    }
+    return $max_number;
+  }
+
   // research fields list for user view
   public function get_fields_list($parent_id = 0, $with_levels = TRUE)
   {
@@ -92,21 +112,7 @@ class Research_model extends CI_Model {
         $field_ids[] = $parent_id;
       $this->load_users_research_list($field_ids);
       if ($parent_id > 0)
-      {
-        // get current level number by parent research field level
-        $max_number = 0;
-        $user_finished_parent_research_levels =
-          $this->get_users_finished_research_levels($parent_id);
-        if (!empty($user_finished_parent_research_levels))
-        {
-          $this->db->from($this->_levels_table);
-          $this->db->select("max(number) as max_number");
-          $this->db->where_in("id", $user_finished_parent_research_levels);
-          $query = $this->db->get();
-          foreach ($query->result() as $row)
-            $max_number = $row->max_number;
-        }
-      }
+        $max_number = $this->get_fields_level_max_number($parent_id);
 
       foreach ($fields_list as $id => $field)
       {
@@ -132,7 +138,8 @@ class Research_model extends CI_Model {
             "user" => $this->get_users_research_entry($id, $row->id)
           );
         }
-        if (empty($fields_list[$id]["levels"][$row->id]))
+        if (count($fields_list[$id]["levels"]) > 0 &&
+            empty($fields_list[$id]["levels"][$row->id]))
           unset($fields_list[$id]);
       }
     }

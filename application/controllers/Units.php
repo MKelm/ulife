@@ -18,6 +18,7 @@ class Units extends CI_Controller {
       "action_status" => FALSE,
       "units" => $this->units_model->get_training_list()
     );
+    $this->view->title .= "Ausbildung";
     $this->view->data = $data;
     $this->view->page = "units/training";
     $this->view->load();
@@ -30,6 +31,7 @@ class Units extends CI_Controller {
       "action_status" => FALSE,
       "units" => $this->units_model->get_inventory_list()
     );
+    $this->view->title .= "Inventar";
     $this->view->data = $data;
     $this->view->page = "units/inventory";
     $this->view->load();
@@ -52,6 +54,7 @@ class Units extends CI_Controller {
     }
 
     $data["units"] = $this->units_model->get_selection_list();
+    $this->view->title .= "Auswahl";
     $this->view->data = $data;
     $this->view->page = "units/selection";
     $this->view->load();

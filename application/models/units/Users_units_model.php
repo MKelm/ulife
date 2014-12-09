@@ -15,12 +15,14 @@ class Users_units_model extends CI_Model {
     $units = array();
     $conditions = array("user_id" => $user_id);
     if ($in_training == TRUE) {
-      $conditions["rounds >"] = 0;
+      $conditions["start_round >"] = 0;
     } else {
-      $conditions["rounds"] = 0;
+      $conditions["start_round"] = 0;
     }
-    $this->db->select(array("id", "unit_id", "level_id", "rounds", "time"));
-    $this->db->order_by("time", "desc");
+    $this->db->select(
+      array("id", "unit_id", "level_id", "start_round", "end_round")
+    );
+    $this->db->order_by("end_round", "desc");
     $query = $this->db->get_where(
       $this->_table, $conditions
     );
@@ -30,8 +32,8 @@ class Users_units_model extends CI_Model {
         "id" => $row->id,
         "unit_id" => $row->unit_id,
         "level_id" => $row->level_id,
-        "rounds" => $row->rounds,
-        "time" => $row->time
+        "start_round" => $row->start_round,
+        "end_round" => $row->end_round
       );
     }
     return $units;

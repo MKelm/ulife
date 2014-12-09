@@ -138,7 +138,7 @@ class Research_model extends CI_Model {
             "user" => $this->get_users_research_entry($id, $row->id)
           );
         }
-        if (count($fields_list[$id]["levels"]) > 0 &&
+        if (count($fields_list[$id]["levels"]) == 0 ||
             empty($fields_list[$id]["levels"][$row->id]))
           unset($fields_list[$id]);
       }

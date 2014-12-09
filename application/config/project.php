@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+// UPDATE/IMPORT
+$config["access_key"] = "asecretkey";
+$config["import_data_path"] = __DIR__."/../../data/";
+
 // ROUNDS
 $config["update_interval"] = 60;
 

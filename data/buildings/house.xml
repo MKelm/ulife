@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<building name="house">
+  <title>Wohnhaus</title>
+  <text>Durch den Bau werden Bürger gewonnen</text>
+  <units></units>
+  <research>
+    <title>Wohnhaus</title>
+    <text>Schaltet weitere Wohnhaus-Gebäudelevel frei</text>
+    <levels>
+      <level num="1" frl-num="0" researchers="2" experience="0" />
+      <level num="2" frl-num="2" researchers="4" experience="1000" />
+      <level num="3" frl-num="4" researchers="8" experience="2500" />
+      <level num="4" frl-num="6" researchers="12" experience="4000"/>
+    </levels>
+  </research>
+  <levels>
+    <level num="1" rl-num="1" c-wood="1000" c-stones="1000" c-workers="2" c-rounds="5" volume="20" />
+    <level num="2" rl-num="2" c-wood="2000" c-stones="2000" c-workers="4" c-rounds="10" volume="30" />
+    <level num="3" rl-num="3" c-wood="4000" c-stones="4000" c-workers="8" c-rounds="20" volume="40" />
+    <level num="4" rl-num="4" c-wood="8000" c-stones="8000" c-workers="16" c-rounds="30" volume="50" />
+  </levels>
+</building>

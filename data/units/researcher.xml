@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit name="researcher">
+  <title>Forscher</title>
+  <text>Generiert ein Volumen an Erfahrung zum Erforschen von Gebäuden und Einheiten</text>
+  <research>
+    <title>Forscher</title>
+    <text>Schaltet weitere Forscher-Einheitslevel frei</text>
+    <levels>
+      <level num="1" frl-num="0" researchers="2" experience="0" />
+      <level num="2" frl-num="2" researchers="4" experience="1000" />
+      <level num="3" frl-num="4" researchers="8" experience="2500" />
+      <level num="4" frl-num="6" researchers="12" experience="4000"/>
+    </levels>
+  </research>
+  <levels>
+    <level num="1" rl-num="1" t-coins="1000" t-rounds="5" volume="20" />
+    <level num="2" rl-num="2" t-coins="2500" t-rounds="10" volume="30" />
+    <level num="3" rl-num="3" t-coins="4000" t-rounds="20" volume="40" />
+    <level num="4" rl-num="4" t-coins="8000" t-rounds="30" volume="50" />
+  </levels>
+</unit>

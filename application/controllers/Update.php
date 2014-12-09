@@ -10,7 +10,7 @@ class Update extends CI_Controller {
 
   public function perform($key = NULL)
   {
-    if (!empty($key))
+    if (!empty($key) && $key == $this->config->item("access_key"))
     {
       $data = array("round_amount" => 0);
       $this->load->model("update_model");

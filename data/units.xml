@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<field name="units">
+  <research>
+    <title>Einheiten</title>
+    <text>Schaltet weiter Forschungsfelder für Einheiten frei</text>
+    <levels>
+      <level num="1" researchers="2" experience="1000" />
+      <level num="2" researchers="4" experience="2500" />
+      <level num="3" researchers="6" experience="5000" />
+      <level num="4" researchers="8" experience="10000" />
+      <level num="5" researchers="10" experience="16000" />
+      <level num="6" researchers="12" experience="24000" />
+    </levels>
+  </research>
+</field>

@@ -6,10 +6,10 @@
     <title>Forscher</title>
     <text>Schaltet weitere Forscher-Einheitslevel frei</text>
     <levels>
-      <level num="1" frl-num="0" researchers="2" experience="0" />
-      <level num="2" frl-num="2" researchers="4" experience="1000" />
-      <level num="3" frl-num="4" researchers="8" experience="2500" />
-      <level num="4" frl-num="6" researchers="12" experience="4000"/>
+      <level num="1" frl-num="1" researchers="2" experience="1000" />
+      <level num="2" frl-num="2" researchers="4" experience="2500" />
+      <level num="3" frl-num="4" researchers="8" experience="4000" />
+      <level num="4" frl-num="6" researchers="12" experience="8000"/>
     </levels>
   </research>
   <levels>

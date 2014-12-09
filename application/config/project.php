@@ -9,7 +9,7 @@ $config["start_researchers_amount"] = 4;
 $config["start_researchers_level_num"] = 1;
 
 // ROUNDS
-$config["update_interval"] = 60;
+$config["update_interval"] = 1;
 
 // REGISTRATION CONFIRMATION EMAIL
 $config["send_regc_email"] = FALSE;

@@ -14,7 +14,6 @@ class Login_model extends CI_Model {
   public function __construct()
   {
     parent::__construct();
-    $this->load->database();
     $this->load->library("form_validation");
     $this->form_validation->set_error_delimiters(
       "<div class=\"alert alert-danger\" role=\"alert\">", "</div>"

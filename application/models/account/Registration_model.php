@@ -20,7 +20,6 @@ class Registration_model extends CI_Model {
   }
 
   private function _register_user($data) {
-    $this->load->database();
     $registration_key = md5(microtime(TRUE).rand());
     $status = $this->db->insert(
       $this->_users_table,
@@ -117,7 +116,6 @@ class Registration_model extends CI_Model {
   }
 
   public function confirm($key) {
-    $this->load->database();
     $this->db->select("id");
     $query = $this->db->get_where(
       $this->_users_table, array("registration" => $key)

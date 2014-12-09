@@ -10,7 +10,6 @@ class Users_units_model extends CI_Model {
   public function __construct()
   {
     parent::__construct();
-    $this->load->database();
   }
 
   public function pay_unit($user_id, $coins)

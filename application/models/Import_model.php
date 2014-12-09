@@ -34,7 +34,6 @@ class Import_model extends CI_Model {
   public function __construct()
   {
     parent::__construct();
-    $this->load->database();
     $this->_import_data_path = $this->config->item("import_data_path");
   }
 

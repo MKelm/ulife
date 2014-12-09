@@ -23,6 +23,8 @@ class Import extends CI_Controller {
       $this->import_model->buildings();
       $this->import_model->units();
 
+      $this->import_model->set_user_start_units();
+
       $this->import_model->config();
 
       $this->output

@@ -14,6 +14,7 @@ class Import_model extends CI_Model {
   private $_units_table = "units";
   private $_units_levels_table = "units_levels";
 
+  private $_users_table = "users";
   private $_users_builders_table = "users_builders";
   private $_users_buildings_table = "users_buildings";
   private $_users_units_table = "users_units";
@@ -25,6 +26,8 @@ class Import_model extends CI_Model {
 
   private $_building_ids = array();
   private $_unit_ids = array();
+
+  private $_researcher_unit = NULL;
 
   private $_import_data_path = "/";
 
@@ -57,7 +60,7 @@ class Import_model extends CI_Model {
   public function config() {
     $this->load->model("update_model");
     $config = array(
-      "update_time" => time(),
+      "update_time" => time() - $this->config->item("update_interval"),
       "update_interval" => $this->config->item("update_interval"),
       "round_number" => 0,
       "users_amount" => $this->update_model->get_users_amount()
@@ -220,6 +223,38 @@ class Import_model extends CI_Model {
         $this->db->insert(
           $this->_units_levels_table, $data
         );
+        // get unit data to set user start units
+        if ($unit_name == "researcher" &&
+            (int)$level_attributes["num"] == $this->config->item("start_researchers_level_num"))
+          $this->_researcher_unit = array(
+            "id" => $unit_id,
+            "level_id" => $this->db->insert_id()
+          );
+      }
+    }
+  }
+
+  public function set_user_start_units() {
+    $user_ids = array();
+    $this->db->from($this->_users_table);
+    $this->db->select("id");
+    $query = $this->db->get();
+    foreach ($query->result() as $row)
+      $user_ids[] = $row->id;
+
+    // insert researchers start units
+    foreach ($user_ids as $user_id)
+    {
+      for ($i = 0; $i < $this->config->item("start_researchers_amount"); $i++)
+      {
+        $data = array(
+          "user_id" => $user_id,
+          "unit_id" => $this->_researcher_unit["id"],
+          "level_id" => $this->_researcher_unit["level_id"],
+          "start_round" => 0,
+          "end_round" => 0
+        );
+        $this->db->insert($this->_users_units_table, $data);
       }
     }
   }

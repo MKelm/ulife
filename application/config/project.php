@@ -5,6 +5,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config["access_key"] = "asecretkey";
 $config["import_data_path"] = __DIR__."/../../data/";
 
+$config["start_researchers_amount"] = 4;
+$config["start_researchers_level_num"] = 1;
+
 // ROUNDS
 $config["update_interval"] = 60;
 

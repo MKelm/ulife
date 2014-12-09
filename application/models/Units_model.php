@@ -146,6 +146,14 @@ class Units_model extends CI_Model {
     return $result;
   }
 
+  public function release_unit($user_unit_id)
+  {
+    $this->load->model("units/users_units_model", "user_model");
+    return $this->user_model->delete_unit(
+      $this->session->userdata("user_id"), $user_unit_id
+    );
+  }
+
   public function get_unit_id_by_name($name)
   {
     $this->db->select(array("id"));

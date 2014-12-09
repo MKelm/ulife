@@ -4,11 +4,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Users_units_model extends CI_Model {
 
   private $_table = "users_units";
+  private $_researchers_table = "users_researchers";
+  private $_builders_table = "users_builders";
 
   public function __construct()
   {
     parent::__construct();
     $this->load->database();
+  }
+
+  public function delete_unit($user_id, $user_unit_id)
+  {
+    // check if unit is used in research / build process
+    $this->db->from($this->_researchers_table);
+    $this->db->where(array("unit_id" => $user_unit_id));
+    if ($this->db->count_all_results() > 0)
+      return FALSE;
+
+    $this->db->from($this->_builders_table);
+    $this->db->where(array("unit_id" => $user_unit_id));
+    if ($this->db->count_all_results() > 0)
+      return FALSE;
+
+    return $this->db->delete(
+      $this->_table, array("user_id" => $user_id, "id" => $user_unit_id)
+    );
   }
 
   public function get_units_list($user_id, $in_training = FALSE) {

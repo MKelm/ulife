@@ -4,6 +4,11 @@
 <? if ($action == "pause" && $action_status == FALSE): ?>
 <div class="alert alert-danger" role="alert">Die Ausbildung eines Bürgers zur Einheit konnte nicht pausiert werden!</div>
 <? endif; ?>
+<!-- no units message -->
+<? if (empty($units)): ?>
+<div class="alert alert-warning" role="alert">Derzeit werden keine Einheiten ausgebildet, bitte bilde Einheiten über die Auswahl aus!</div>
+<? else: ?>
+<!-- training table -->
 <table class="table">
   <thead>
     <tr>
@@ -33,3 +38,4 @@
     <? endforeach; ?>
   </tbody>
 </table>
+<? endif; ?>

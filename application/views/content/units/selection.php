@@ -4,6 +4,11 @@
 <? if ($action == "train" && $action_status == FALSE): ?>
 <div class="alert alert-danger" role="alert">Die Ausbildung eines Bürgers zur Einheit konnte nicht begonnen werden!</div>
 <? endif; ?>
+<!-- no units selection message -->
+<? if (empty($units)): ?>
+<div class="alert alert-warning" role="alert">Keine Einheitentypen verfügbar, bitte erforsche zuerst Forschungsfelder für Einheitstypen!</div>
+<? else: ?>
+<!-- selection table -->
 <table class="table">
   <thead>
     <tr>
@@ -28,3 +33,4 @@
     endforeach; ?>
   </tbody>
 </table>
+<? endif; ?>

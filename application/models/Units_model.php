@@ -7,13 +7,15 @@ class Units_model extends CI_Model {
 
   private $_levels_table = "units_levels";
 
+  private $_users_research_table = "users_research";
+
   public function __construct()
   {
     parent::__construct();
     $this->load->database();
   }
 
-  public function get_selection_list($with_levels = TRUE)
+  public function get_selection_list($with_levels = TRUE, $research_dependency = TRUE)
   {
     $list = array();
     $this->db->select(array("id", "name", "title", "text"));
@@ -36,12 +38,19 @@ class Units_model extends CI_Model {
         $list[$id]["levels"] = array();
         $this->db->select(
           array(
-            "id", "number", "r_level_id", "t_coins", "t_rounds", "volume"
+            "ul.id", "ul.number", "ul.r_level_id", "ul.t_coins", "ul.t_rounds", "ul.volume"
           )
         );
-        $this->db->from($this->_levels_table);
-        $this->db->order_by("number", "asc");
-        $this->db->where("unit_id", $id);
+        $this->db->from($this->_levels_table." as ul");
+        if ($research_dependency === TRUE)
+          $this->db->join(
+            $this->_users_research_table." as ur",
+            "ur.field_level_id = ul.r_level_id AND ur.start_round = 0",
+            "inner"
+          );
+
+        $this->db->order_by("ul.number", "asc");
+        $this->db->where("ul.unit_id", $id);
         $query = $this->db->get();
         foreach ($query->result() as $row)
         {
@@ -54,6 +63,9 @@ class Units_model extends CI_Model {
             "volume" => $row->volume
           );
         }
+        if (count($list[$id]["levels"]) == 0 ||
+            empty($list[$id]["levels"][$row->id]))
+          unset($list[$id]);
       }
     }
     return $list;
@@ -89,7 +101,7 @@ class Units_model extends CI_Model {
 
   public function get_inventory_list()
   {
-    $units = $this->get_selection_list(TRUE);
+    $units = $this->get_selection_list(TRUE, FALSE);
     $this->load->model("units/users_units_model", "user_model");
     $inventory_units = $this->user_model->get_units_list(
       $this->session->userdata("user_id"), FALSE

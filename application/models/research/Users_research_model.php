@@ -81,7 +81,8 @@ class Users_research_model extends CI_Model {
     $all_amount = count($user_unit_ids);
 
     $this->db->where("user_id", $user_id);
-    $this->db->where_in("unit_id", $user_unit_ids);
+    if (!empty($user_unit_ids))
+      $this->db->where_in("unit_id", $user_unit_ids);
     $this->db->from($this->_researchers_table);
     $active_amount = $this->db->count_all_results();
 

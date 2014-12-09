@@ -26,7 +26,12 @@ class Units extends CI_Controller {
 
   public function inventory($action = NULL, $unit_id = 0)
   {
+    $this->load->model("update_model");
+    $update_config = $this->update_model->load_config();
     $data = array(
+      "round_number" => $update_config["round_number"],
+      "update_time" => $update_config["update_time"],
+      "update_interval" => $update_config["update_interval"],
       "action" => $action,
       "action_status" => FALSE,
       "units" => $this->units_model->get_inventory_list()

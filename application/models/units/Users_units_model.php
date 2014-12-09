@@ -13,6 +13,28 @@ class Users_units_model extends CI_Model {
     $this->load->database();
   }
 
+  public function pay_unit($user_id, $coins)
+  {
+    $this->load->model("account/account_model");
+    return $this->account_model->change_coins($user_id, -1 * $coins);
+  }
+
+  public function add_unit($user_id, $unit_id, $level_id, $rounds)
+  {
+    $this->load->model("update_model");
+    $update_config = $this->update_model->load_config();
+    return $this->db->insert(
+      $this->_table,
+      array(
+        "user_id" => $user_id,
+        "unit_id" => $unit_id,
+        "level_id" => $level_id,
+        "start_round" => $update_config["round_number"] + 1,
+        "end_round" => $update_config["round_number"] + 1 + $rounds
+      )
+    );
+  }
+
   public function delete_unit($user_id, $user_unit_id)
   {
     // check if unit is used in research / build process

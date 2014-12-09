@@ -11,7 +11,21 @@ class Account_model extends CI_Model {
     $this->load->database();
   }
 
-  public function get_user_data($user_id) {
+  public function change_coins($user_id, $amount)
+  {
+    $user_data = $this->get_user_data($user_id);
+    $this->db->where("id", $user_id);
+    if (isset($user_data["coins"]) && $user_data["coins"] + $amount >= 0)
+    {
+      return $this->db->update(
+        $this->_users_table, array("coins" => $user_data["coins"] + $amount)
+      );
+    }
+    return FALSE;
+  }
+
+  public function get_user_data($user_id)
+  {
 
     $query = $this->db->get_where($this->_users_table, array("id" => $user_id));
     foreach ($query->result() as $row)

@@ -132,12 +132,13 @@ class Units_model extends CI_Model {
     {
       $level_details = $units[$id]["levels"][$level_id];
       $this->load->model("units/users_units_model", "user_model");
-      /*$result = $result && $this->user_model->change_coins(
-        -1 * $level_details["t_coins"]
+      $result = $result && $this->user_model->pay_unit(
+        $this->session->userdata("user_id"), $level_details["t_coins"]
       );
       $result = $result && $this->user_model->add_unit(
+        $this->session->userdata("user_id"),
         $id, $level_id, $level_details["t_rounds"]
-      );*/
+      );
     }
     else
     {

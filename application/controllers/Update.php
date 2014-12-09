@@ -32,6 +32,9 @@ class Update extends CI_Controller {
         // update research
         $this->update_model->update_research();
 
+        // update units
+        $this->update_model->update_units();
+
         // update config
         $this->update_model->set_config(
           "users_amount", $this->update_model->get_users_amount()

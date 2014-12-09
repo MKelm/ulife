@@ -56,14 +56,14 @@ class Update_model extends CI_Model {
 
   public function update_research()
   {
-
     $finished_research = array();
     $this->db->select(array("id"));
     $this->db->where("start_round >", 0);
     $this->db->where("end_round <=", $this->_config["round_number"]);
     $this->db->from($this->_users_research_table);
     $query = $this->db->get();
-    foreach ($query->result() as $row) {
+    foreach ($query->result() as $row)
+    {
       $finished_research[] = $row->id;
     }
 
@@ -79,6 +79,31 @@ class Update_model extends CI_Model {
       $result = $this->db->delete(
         $this->_users_researchers_table,
         array("research_id" => $id)
+      );
+    }
+  }
+
+  public function update_units()
+  {
+
+    $finished_training = array();
+    $this->db->select(array("id"));
+    $this->db->where("start_round >", 0);
+    $this->db->where("end_round <=", $this->_config["round_number"]);
+    $this->db->from($this->_users_units_table);
+    $query = $this->db->get();
+    foreach ($query->result() as $row)
+    {
+      $finished_training[] = $row->id;
+    }
+
+    foreach ($finished_training as $id)
+    {
+      // final update
+      $this->db->where("id", $id);
+      $this->db->update(
+        $this->_users_units_table,
+        array("start_round" => 0)
       );
     }
   }

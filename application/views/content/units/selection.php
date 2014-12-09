@@ -15,18 +15,19 @@
       <th>Titel</th>
       <th>Volumen</th>
       <th>Münzen</th>
-      <th>Runden</th>
+      <th>Ausbildungszeit</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <? foreach ($units as $id => $unit):
-        foreach ($unit["levels"] as $level_id => $level): ?>
+        foreach ($unit["levels"] as $level_id => $level):
+        $training_time = $level["t_rounds"] * $update_interval; ?>
     <tr>
       <td><?=$unit["title"]?> [<?=$level["number"]?>] <abbr title="<?=$unit["text"]?>">?</abbr></td>
       <td><?=get_numeric_value($level["volume"])?></td>
       <td><?=get_numeric_value($level["t_coins"])?></td>
-      <td><?=get_numeric_value($level["t_rounds"])?></td>
+      <td><?=get_numeric_time_value($training_time)?></td>
       <td><a href="<?=base_url()?>units/selection/train/<?=$id?>/<?=$level_id?>">Ausbilden</a></td>
     </tr>
     <? endforeach;

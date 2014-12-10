@@ -30,20 +30,23 @@ class Users_log {
     $this->CI =& get_instance();
   }
 
-  private function _save_message($level, $text, $time) {
+  private function _save_message($level, $text, $time)
+  {
     return $this->CI->db->insert(
       $this->_log_table,
       array(
         "user_id" => $this->CI->session->userdata("user_id"),
         "time" => $time,
-        "type" => $level,
-        "text" => $time
+        "level" => $level,
+        "text" => $text
       )
     );
   }
 
-  public function set_message($level, $text, $save = FALSE) {
-    $time = time();
+  public function set_message($level, $text, $time = NULL, $save = FALSE)
+  {
+    if ($time === NULL)
+      $time = time();
     $this->_messages[] = array(
       "level" => $level,
       "text" => $text,
@@ -52,6 +55,27 @@ class Users_log {
     if ($save == TRUE)
       return $this->_save_message($level, $text, $time);
     return TRUE;
+  }
+
+  public function load_messsages($limit = NULL, $offset = NULL)
+  {
+    $this->CI->db->from($this->_log_table);
+    $this->CI->db->select(array("time", "level", "text"));
+    $this->CI->db->where("user_id", $this->CI->session->userdata("user_id"));
+    if ($limit !== NULL)
+      $this->CI->db->limit($limit);
+    if ($offset !== NULL)
+      $this->CI->db->offset($offset);
+    $query = $this->CI->db->get();
+    foreach ($query->result() as $row)
+      $this->set_message($row->level, $row->text, $row->time);
+  }
+
+  public function count_messages()
+  {
+    $this->CI->db->from($this->_log_table);
+    $this->CI->db->where("user_id", $this->CI->session->userdata("user_id"));
+    return $this->CI->db->count_all_results();
   }
 
   public function get_output()

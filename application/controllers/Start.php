@@ -21,14 +21,19 @@ class Start extends CI_Controller {
     $this->view->load();
   }
 
-  public function log()
+  public function log($page = 1)
   {
     $this->load->library("users_log");
-    $this->users_log->set_message(LOG_LEVEL_SUCCESS, "Das ist super geglückt!");
-    $this->users_log->set_message(LOG_LEVEL_INFO, "Toll und super zugleich!");
-    $this->users_log->set_message(LOG_LEVEL_WARNING, "Achtung ein Bär kommt!");
-    $this->users_log->set_message(LOG_LEVEL_DANGER, "Oh, das geht so nicht!");
+    $this->users_log->load_messsages(5, ($page - 1) * 5);
     $data["users_log_output"] = $this->users_log->get_output();
+
+    $this->load->library("pagination");
+    $config["base_url"] = base_url()."start/log/";
+    $config["total_rows"] = $this->users_log->count_messages();
+    $config["per_page"] = 5;
+    $this->pagination->initialize($config);
+    $data["users_log_pagination"] = $this->pagination->create_links();
+
     $this->view->data = $data;
     $this->view->title .= "Protokoll";
     $this->view->page = "start/log";

@@ -30,6 +30,7 @@ class Units_model extends CI_Model {
         "text" => $row->text
       );
     }
+
     if (count($list) > 0 && $with_levels == TRUE)
     {
       foreach ($list as $id => $building)
@@ -50,7 +51,7 @@ class Units_model extends CI_Model {
 
         $this->db->order_by("ul.number", "desc");
         $this->db->where("ul.unit_id", $id);
-        $this->db->limit(1);
+        //$this->db->limit(1);
         $query = $this->db->get();
         foreach ($query->result() as $row)
         {

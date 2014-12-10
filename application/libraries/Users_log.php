@@ -43,7 +43,7 @@ class Users_log {
     );
   }
 
-  public function set_message($level, $text, $time = NULL, $save = FALSE)
+  public function add_message($level, $text, $time = NULL, $save = FALSE)
   {
     if ($time === NULL)
       $time = time();
@@ -68,7 +68,7 @@ class Users_log {
       $this->CI->db->offset($offset);
     $query = $this->CI->db->get();
     foreach ($query->result() as $row)
-      $this->set_message($row->level, $row->text, $row->time);
+      $this->add_message($row->level, $row->text, $row->time);
   }
 
   public function count_messages()
@@ -78,7 +78,7 @@ class Users_log {
     return $this->CI->db->count_all_results();
   }
 
-  public function get_output()
+  public function get_output($with_time = TRUE)
   {
     $output = "";
     foreach ($this->_messages as $message)
@@ -86,10 +86,12 @@ class Users_log {
       $output .= sprintf(
         '<div class="alert alert-%s" role="alert">'.
         '<span class="%s" aria-hidden="true"></span>'.
-        ' %s <strong>%s</strong></div>',
+        ' %s%s%s</div>',
         $this->_log_level_classes[$message["level"]],
         $this->_log_level_glyphs[$message["level"]],
-        date("d.m.Y H:i:s", $message["time"]), $message["text"]
+        $with_time ? date("d.m.Y H:i:s", $message["time"]) : "",
+        $with_time ? ": " : "",
+        $message["text"]
       );
     }
     return $output;

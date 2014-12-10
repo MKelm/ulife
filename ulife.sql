@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 08, 2014 at 07:30 PM
+-- Generation Time: Dec 10, 2014 at 02:39 PM
 -- Server version: 5.5.40-0+wheezy1
 -- PHP Version: 5.4.35-0+deb7u2
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `buildings_levels` (
 `id` int(10) unsigned NOT NULL,
   `building_id` int(10) unsigned NOT NULL,
   `number` int(10) unsigned NOT NULL,
-  `rl_number` int(10) unsigned NOT NULL,
+  `r_level_id` int(10) unsigned NOT NULL,
   `c_wood` int(10) unsigned NOT NULL,
   `c_stones` int(10) unsigned NOT NULL,
   `c_workers` int(10) unsigned NOT NULL,
@@ -106,8 +106,8 @@ CREATE TABLE IF NOT EXISTS `units` (
 CREATE TABLE IF NOT EXISTS `units_levels` (
 `id` int(10) unsigned NOT NULL,
   `unit_id` int(10) unsigned NOT NULL,
-  `number` int(11) NOT NULL,
-  `rl_number` int(11) NOT NULL,
+  `number` int(11) unsigned NOT NULL,
+  `r_level_id` int(11) unsigned NOT NULL,
   `t_coins` int(10) unsigned NOT NULL,
   `t_rounds` int(10) unsigned NOT NULL,
   `volume` int(10) unsigned NOT NULL
@@ -158,6 +158,20 @@ CREATE TABLE IF NOT EXISTS `users_buildings` (
   `level_id` int(10) unsigned NOT NULL,
   `start_round` int(10) unsigned NOT NULL,
   `end_round` int(10) unsigned NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_log`
+--
+
+CREATE TABLE IF NOT EXISTS `users_log` (
+`id` int(10) unsigned NOT NULL,
+  `user_id` int(10) unsigned NOT NULL,
+  `time` int(10) unsigned NOT NULL,
+  `level` tinyint(3) unsigned NOT NULL,
+  `text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -267,10 +281,16 @@ ALTER TABLE `users_buildings`
  ADD PRIMARY KEY (`id`), ADD KEY `user_id` (`user_id`), ADD KEY `time` (`start_round`);
 
 --
+-- Indexes for table `users_log`
+--
+ALTER TABLE `users_log`
+ ADD PRIMARY KEY (`id`), ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `users_research`
 --
 ALTER TABLE `users_research`
- ADD PRIMARY KEY (`id`), ADD KEY `user_id` (`user_id`);
+ ADD PRIMARY KEY (`id`), ADD KEY `user_id` (`user_id`), ADD KEY `field_id` (`field_id`), ADD KEY `field_level_id` (`field_level_id`);
 
 --
 -- Indexes for table `users_researchers`
@@ -327,6 +347,11 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `users_buildings`
 --
 ALTER TABLE `users_buildings`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `users_log`
+--
+ALTER TABLE `users_log`
 MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `users_research`

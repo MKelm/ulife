@@ -1,13 +1,11 @@
-<? if ($action == "release" && $action_status == TRUE): ?>
-<div class="alert alert-success" role="alert">Der ausgebildete Bürger wurde von seinem Einheitsstatus befreit!</div>
-<? endif; ?>
-<? if ($action == "release" && $action_status == FALSE): ?>
-<div class="alert alert-danger" role="alert">Der ausgebildetete Bürger konnte von seinem Einheitsstatus nicht befreit werden!</div>
-<? endif; ?>
-<!-- no units message -->
-<? if (empty($units)): ?>
-<div class="alert alert-warning" role="alert">Keine Einheiten verfügbar, bitte bilde zuerst Einheiten aus!</div>
-<? else: ?>
+<? if ($action == "release" && $action_status == TRUE):
+alert(ALERT_LEVEL_SUCCESS, "Der ausgebildete Bürger wurde von seinem Einheitsstatus befreit!");
+elseif ($action == "release" && $action_status == FALSE):
+alert(ALERT_LEVEL_DANGER, "Der ausgebildetete Bürger konnte von seinem Einheitsstatus nicht befreit werden!");
+endif;
+if (empty($units)): // no units message
+alert(ALERT_LEVEL_WARNING, "Keine Einheiten verfügbar, bitte bilde zuerst Einheiten aus!");
+else: ?>
 <!-- inventory table -->
 <table class="table">
   <thead>

@@ -1,10 +1,9 @@
 <!-- messages -->
-<? if ($action === "construct" && $action_status == TRUE): ?>
-<div class="alert alert-danger" role="alert">Der Aufbau des Gebäudes wurde begonnen!</div>
-<? endif; ?>
-<? if ($action === "construct" && $action_status == FALSE): ?>
-<div class="alert alert-success" role="alert">Der Aufbau des Gebäudes konnte nicht begonnen werden!</div>
-<? endif; ?>
+<? if ($action === "construct" && $action_status == TRUE):
+alert(ALERT_LEVEL_SUCCESS, "Der Aufbau des Gebäudes wurde begonnen!");
+elseif ($action === "construct" && $action_status == FALSE):
+alert(ALERT_LEVEL_DANGER, "Der Aufbau des Gebäudes konnte nicht begonnen werden!");
+endif; ?>
 <!-- table -->
 <table class="table">
   <thead>
@@ -28,7 +27,7 @@
       <td><?=get_numeric_value($level["c_stones"])?></td>
       <td><?=get_numeric_value($level["c_workers"])?></td>
       <td><?=get_numeric_value($level["c_rounds"])?></td>
-      <td><a href="<?=base_url()?>/selection/construct/<?=$id?>/<?=$level_id?>">Aufbauen</a></td>
+      <td><a href="<?=base_url()?>buildings/selection/construct/<?=$id?>/<?=$level_id?>">Aufbauen</a></td>
     </tr>
     <? endforeach;
     endforeach; ?>

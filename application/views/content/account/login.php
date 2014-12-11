@@ -2,12 +2,11 @@
   <div class="panel-heading"><h3 class="panel-title"><strong>Anmelden</strong></h3></div>
   <div class="panel-body">
     <!-- messages -->
-    <? if ($confirmation_status === TRUE): ?>
-    <div class="alert alert-success" role="alert">Registrierung bestätigt, du kannst dich nun anmelden!</div>
-    <? endif; ?>
-    <? if ($confirmation_status === FALSE): ?>
-    <div class="alert alert-danger" role="alert">Registrierung fehlerhaft, Bestätigung nicht erfolgreich!</div>
-    <? endif; ?>
+    <? if ($confirmation_status === TRUE):
+    alert(ALERT_LEVEL_SUCCESS, "Registrierung bestätigt, du kannst dich nun anmelden!");
+    elseif ($confirmation_status === FALSE):
+    alert(ALERT_LEVEL_DANGER, "Registrierung fehlerhaft, Bestätigung nicht erfolgreich!");
+    endif; ?>
     <?=validation_errors()?>
     <!-- form -->
     <form role="form" name="login" action="<?=base_url()?>account/login/send" method="post" accept-charset="utf-8">

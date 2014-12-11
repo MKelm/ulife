@@ -2,11 +2,11 @@
   <div class="panel-heading"><h3 class="panel-title"><strong>Registrierung  </strong></h3></div>
   <div class="panel-body">
     <!-- messages -->
-    <? if (!empty($confirmation_link)): ?>
-    <div class="alert alert-warning" role="alert">Bitte bestätige deine Registrierung über <a href="<?=$confirmation_link?>">diesen Link</a>!</div>
-    <? elseif ($registration_status === TRUE): ?>
-    <div class="alert alert-success" role="alert">Registrierung erfolgreich, eine Bestätigungsemail wurde versand!</div>
-    <? endif; ?>
+    <? if (!empty($confirmation_link)):
+    alert(ALERT_LEVEL_WARNING, sprintf("Bitte bestätige deine Registrierung über <a href=\"%s\">diesen Link</a>!", $confirmation_link));
+    elseif ($registration_status === TRUE):
+    alert(ALERT_LEVEL_SUCCESS, "Registrierung erfolgreich, eine Bestätigungsemail wurde versand!");
+    endif; ?>
     <?=validation_errors()?>
     <!-- form -->
     <form role="form" name="registration" action="<?=base_url()?>account/registration/send" method="post" accept-charset="utf-8">

@@ -101,6 +101,10 @@ if ( ! function_exists('debug'))
 
 if ( ! function_exists('alert'))
 {
+  define("ALERT_LEVEL_SUCCESS", 0);
+  define("ALERT_LEVEL_INFO", 1);
+  define("ALERT_LEVEL_WARNING", 2);
+  define("ALERT_LEVEL_DANGER", 3);
   function alert($level, $text, $time = NULL, $return = FALSE)
   {
     $classes = array(

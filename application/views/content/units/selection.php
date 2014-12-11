@@ -1,13 +1,11 @@
-<? if ($action == "train" && $action_status == TRUE): ?>
-<div class="alert alert-success" role="alert">Die Ausbildung eines Bürger zur Einheit wurde begonnen!</div>
-<? endif; ?>
-<? if ($action == "train" && $action_status == FALSE): ?>
-<div class="alert alert-danger" role="alert">Die Ausbildung eines Bürgers zur Einheit konnte nicht begonnen werden!</div>
-<? endif; ?>
-<!-- no units selection message -->
-<? if (empty($units)): ?>
-<div class="alert alert-warning" role="alert">Keine Einheitentypen verfügbar, bitte erforsche zuerst Forschungsfelder für Einheitstypen!</div>
-<? else: ?>
+<? if ($action == "train" && $action_status == TRUE):
+alert(ALERT_LEVEL_SUCCESS, "Die Ausbildung eines Bürger zur Einheit wurde begonnen!");
+elseif ($action == "train" && $action_status == FALSE):
+alert(ALERT_LEVEL_DANGER, "Die Ausbildung eines Bürgers zur Einheit konnte nicht begonnen werden!");
+endif;
+if (empty($units)): // no units message
+alert(ALERT_LEVEL_WARNING, "Keine Einheitentypen verfügbar, bitte erforsche zuerst Forschungsfelder für Einheitstypen!");
+else: ?>
 <!-- selection table -->
 <table class="table">
   <thead>

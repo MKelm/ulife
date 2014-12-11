@@ -1,21 +1,17 @@
 <!-- messages -->
-<? if ($action === "start" && $action_status == FALSE): ?>
-<div class="alert alert-danger" role="alert">Forschung konnte nicht gestartet werden!</div>
-<? endif; ?>
-<? if ($action === "start" && $action_status == TRUE): ?>
-<div class="alert alert-success" role="alert">Forschung wurde erfolgreich gestartet!</div>
-<? endif; ?>
-<? if ($action === "cancel" && $action_status == FALSE): ?>
-<div class="alert alert-danger" role="alert">Forschung konnte nicht abgebrochen werden!</div>
-<? endif; ?>
-<? if ($action === "cancel" && $action_status == TRUE): ?>
-<div class="alert alert-success" role="alert">Forschung wurde erfolgreich abgebrochen!</div>
-<? endif; ?>
-<!-- no research fields message -->
-<? if (empty($research_fields)): ?>
-<div class="alert alert-warning" role="alert">Keine Forschungsfelder verfügbar, bitte erforsche zuerst allgemeine Felder!</div>
-<? else: ?>
-<!-- research table -->
+<? if ($action === "start" && $action_status == TRUE):
+alert(ALERT_LEVEL_SUCCESS, "Forschung wurde erfolgreich gestartet!");
+elseif ($action === "start" && $action_status == FALSE):
+alert(ALERT_LEVEL_DANGER, "Forschung konnte nicht gestartet werden!");
+elseif ($action === "cancel" && $action_status == TRUE):
+alert(ALERT_LEVEL_SUCCESS, "Forschung wurde erfolgreich abgebrochen!");
+elseif ($action === "cancel" && $action_status == FALSE):
+alert(ALERT_LEVEL_DANGER, "Forschung konnte nicht abgebrochen werden!");
+endif;
+if (empty($research_fields)):
+alert(ALERT_LEVEL_WARNING, "Keine Forschungsfelder verfügbar, bitte erforsche zuerst allgemeine Felder!");
+else: ?>
+<!-- research fields table -->
 <table class="table">
   <thead>
     <tr>

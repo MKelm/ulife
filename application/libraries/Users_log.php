@@ -12,22 +12,12 @@ class Users_log {
 
   private $_log_table = "users_log";
 
-  private $_log_level_classes = array(
-    "success", "info", "warning", "danger"
-  );
-
-  private $_log_level_glyphs = array(
-    "glyphicon glyphicon-ok-sign",
-    "glyphicon glyphicon-info-sign",
-    "glyphicon glyphicon-warning-sign",
-    "glyphicon glyphicon-exclamation-sign"
-  );
-
   private $_messages = array();
 
   public function __construct()
   {
     $this->CI =& get_instance();
+    $this->CI->load->helper("output");
   }
 
   private function _save_message($level, $text, $time)
@@ -83,15 +73,11 @@ class Users_log {
     $output = "";
     foreach ($this->_messages as $message)
     {
-      $output .= sprintf(
-        '<div class="alert alert-%s" role="alert">'.
-        '<span class="%s" aria-hidden="true"></span>'.
-        ' %s%s%s</div>',
-        $this->_log_level_classes[$message["level"]],
-        $this->_log_level_glyphs[$message["level"]],
-        $with_time ? date("d.m.Y H:i:s", $message["time"]) : "",
-        $with_time ? ": " : "",
-        $message["text"]
+      $output .= alert(
+        $message["level"],
+        $message["text"],
+        $with_time === TRUE ? $message["time"] : NULL,
+        TRUE
       );
     }
     return $output;

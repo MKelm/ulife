@@ -98,3 +98,32 @@ if ( ! function_exists('debug'))
     echo "</pre>";
   }
 }
+
+if ( ! function_exists('alert'))
+{
+  function alert($level, $text, $time = NULL, $return = FALSE)
+  {
+    $classes = array(
+      "success", "info", "warning", "danger"
+    );
+    $glyphs = array(
+      "glyphicon glyphicon-ok-sign",
+      "glyphicon glyphicon-info-sign",
+      "glyphicon glyphicon-warning-sign",
+      "glyphicon glyphicon-exclamation-sign"
+    );
+    $result = sprintf(
+      "<div class=\"alert alert-%s\" role=\"alert\">".
+      "<span class=\"%s\" aria-hidden=\"true\"></span> ".
+      "%s%s%s</div>",
+      $classes[$level], $glyphs[$level],
+      $time !== NULL ? date("d.m.Y H:i:s", $time) : "",
+      $time !== NULL ? ": " : " ",
+      $text
+    );
+    if ($return === TRUE)
+      return $result;
+    else
+      echo $result;
+  }
+}
